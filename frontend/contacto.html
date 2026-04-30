@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto – Hotel Luxury</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="./css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/estilos.css">
+</head>
+
+<body>
+
+    <!-- BARRA SUPERIOR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="inicio.html">
+                <img src="imagenes/logo.png" alt="Logo" class="logo-hotel me-2">
+                Hotel Luxury
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <!-- MENÚ IZQUIERDA -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="inicio.html">Inicio</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="reservar.html">Reservar</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="restaurante.html">Restaurante</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="actividades.html">Actividades</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="eventos.html">Eventos</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="contacto.html">Contacto</a>
+                    </li>
+                </ul>
+
+                <!-- MENÚ USUARIO A LA DERECHA -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item d-flex align-items-center me-2">
+                        <span id="nombre-usuario" class="text-white fw-bold"></span>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
+                            <img src="imagenes/perfil.png" class="icono-usuario">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="perfil.html">Mi Perfil</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="cerrarSesion()">Cerrar sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="container mt-5 pt-5">
+        <h1 class="text-center mb-4">Contacto</h1>
+        <p class="text-center">Estamos aquí para ayudarte. Puedes escribirnos, llamarnos o visitarnos.</p>
+    </div>
+
+
+    <!-- INFORMACIÓN DE CONTACTO -->
+    <div class="container mt-4">
+        <div class="row text-center">
+
+            <div class="col-md-4 mb-4">
+                <h4>📧 Correo electrónico</h4>
+                <p>contacto@hotelluxury.com</p>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <h4>📞 Teléfono</h4>
+                <p>+34 910 123 456</p>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <h4>📍 Dirección</h4>
+                <p>Calle del Sol 74, Tenerife, España</p>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- MAPA -->
+    <div class="container mt-4 mb-5">
+        <h2 class="text-center mb-4">Dónde estamos</h2>
+
+        <div class="row justify-content-center">
+            <div class="col-md-10 text-center">
+                <img src="imagenes/maps.png" alt="Mapa del Hotel Luxury" class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+
+
+    <!-- FORMULARIO DE CONTACTO -->
+    <div class="container mt-5 mb-5">
+        <h2 class="text-center mb-4">Envíanos un mensaje</h2>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+
+                <form onsubmit="enviarFormularioContacto(event)">
+
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" id="nombreContacto" class="form-control" placeholder="Tu nombre">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Correo</label>
+                        <input type="email" id="correoContacto" class="form-control" placeholder="Tu correo">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mensaje</label>
+                        <textarea id="mensajeContacto" class="form-control" rows="4" placeholder="Escribe tu mensaje"></textarea>
+                    </div>
+
+                    <!-- MENSAJE PROFESIONAL -->
+                    <div id="msg-contacto" class="alert d-none mt-3"></div>
+
+                    <button class="btn btn-dark w-100" disabled>Enviar</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="bg-dark text-white text-center py-3">
+        <p>© 2026 Hotel Luxury — Todos los derechos reservados</p>
+    </footer>
+
+
+    <!-- SCRIPTS -->
+    <script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="./js/global/global.js"></script>
+    <script src="./js/contacto/contacto.js"></script>
+
+</body>
+</html>
+

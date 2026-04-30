@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividades – Hotel Luxury</title>
+
+    <link rel="stylesheet" href="./css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/estilos.css">
+</head>
+
+<body>
+
+    <!-- BARRA SUPERIOR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="inicio.html">
+                <img src="imagenes/logo.png" alt="Logo" class="logo-hotel me-2">
+                Hotel Luxury
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <!-- MENÚ IZQUIERDA -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="inicio.html">Inicio</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="reservar.html">Reservar</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="restaurante.html">Restaurante</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="actividades.html">Actividades</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="eventos.html">Eventos</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="contacto.html">Contacto</a>
+                    </li>
+                </ul>
+
+                <!-- MENÚ USUARIO -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item d-flex align-items-center me-2">
+                        <span id="nombre-usuario" class="text-white fw-bold"></span>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
+                            <img src="imagenes/perfil.png" class="icono-usuario">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="perfil.html">Mi Perfil</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="cerrarSesion()">Cerrar sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- ESPACIADO SUPERIOR -->
+    <div class="mt-5 pt-4"></div>
+
+    <!-- GALERÍA EXTENDIDA -->
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Galería de Actividades</h2>
+
+        <div class="carrusel-auto">
+            <div class="carrusel-track">
+                <img src="imagenes/BAR/bar_1.1.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/actividades_1.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/espectaculo_1.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/gym_1.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/masaje_1.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/tirolina_2.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/buceo_3.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/parque_acuatico_2.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/parque_acuatico_1.png" alt="">
+
+                <!-- duplicados -->
+                <img src="imagenes/BAR/bar_1.1.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/actividades_1.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/espectaculo_1.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/gym_1.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/masaje_1.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/tirolina_2.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/buceo_3.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/parque_acuatico_2.png" alt="">
+                <img src="imagenes/GYM_SWIM_KIDS/parque_acuatico_1.png" alt="">
+            </div>
+        </div>
+    </div>
+
+    <!-- BLOQUE ÚNICO DE ACTIVIDADES -->
+    <div id="actividades" class="container mt-5">
+        <div class="card shadow p-4 mb-4">
+            <h4 class="mb-3">Reservar Actividad</h4>
+
+            <div class="row">
+                <div class="col-md-12">
+
+                    <!-- FILA 1: FECHA - ACTIVIDAD - TURNO - PARTICIPANTES -->
+                    <div class="row align-items-end mb-3">
+
+                        <!-- FECHA -->
+                        <div class="col-md-3">
+                            <label>Fecha</label>
+                            <input type="date" class="form-control" id="fechaActividad">
+                        </div>
+
+                        <!-- ACTIVIDAD -->
+                        <div class="col-md-3">
+                            <label>Actividad</label>
+                            <select class="form-control" id="actividadSeleccionada">
+                                <option value="Selecciona">Selecciona</option>
+                                <option value="tirolina">Tirolina</option>
+                                <option value="aquagym">Aquagym</option>
+                                <option value="gimnasio">Gimnasio</option>
+                                <option value="masaje">Masaje</option>
+                                <option value="spa">Spa</option>
+                                <option value="espectaculo">Espectáculo</option>
+                                <option value="parque_acuatico">Parque Acuático</option>
+                                <option value="buceo">Buceo</option>
+                            </select>
+                        </div>
+
+                        <!-- TURNO -->
+                        <div class="col-md-3">
+                            <label>Turno</label>
+                            <select class="form-control" id="turnoActividad">
+                                <option value="Selecciona">Selecciona</option>
+                                <option value="mañana">Mañana</option>
+                                <option value="tarde">Tarde</option>
+                            </select>
+                        </div>
+
+                        <!-- PARTICIPANTES -->
+                        <div class="col-md-3">
+                            <label>Participantes</label>
+                            <div class="input-group">
+                                <button class="btn btn-dark" onclick="cambiarParticipantes(-1)">−</button>
+                                <input type="text" class="form-control text-center" id="participantesActividad" value="Selecciona" readonly>
+                                <button class="btn btn-dark" onclick="cambiarParticipantes(1)">+</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- FILA 2: BOTÓN + TOTAL -->
+                    <div class="row mt-3">
+
+                        <div class="col-md-3">
+                            <button class="btn btn-dark w-100 reservar-btn" id="btnActividad" disabled onclick="reservarActividad()">
+                                Reservar
+                            </button>
+                        </div>
+
+                        <div class="col-md-9 d-flex align-items-center justify-content-end">
+                            <div class="total-box">
+                                Total: <span id="totalActividad">0 €</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTÓN DE INFORMACIÓN -->
+    <div class="container text-center mb-5">
+        <button onclick="mostrarNormasActividades()" class="btn btn-dark btn-lg">
+            Información Adicional
+        </button>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark text-white text-center py-3">
+        <p>© 2026 Hotel Luxury — Todos los derechos reservados</p>
+    </footer>
+
+    <!-- MODAL DE NORMAS -->
+    <div class="modal fade" id="modalNormas" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Normas de Actividades</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p><strong>No se pueden realizar dos eventos en un mismo turno del mismo día.</strong></p>
+                    <p>Horario de mañana: <strong>9:30 a 14:00</strong></p>
+                    <p>Horario de tarde: <strong>16:30 a 20:30</strong></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-dark" data-bs-dismiss="modal">Entendido</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="./js/global/global.js"></script>
+    <script src="./js/actividades/actividades.js"></script>
+
+</body>
+</html>

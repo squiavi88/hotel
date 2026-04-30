@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión - Hotel Luxury</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="./css/bootstrap/bootstrap.min.css">
+    <!-- Tus estilos personalizados -->
+    <link rel="stylesheet" href="./css/estilos.css">
+</head>
+
+<body class="fondo-login">
+
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card shadow p-4" style="max-width: 400px; width: 100%;">
+
+            <h3 class="text-center mb-4">Hotel Luxury</h3>
+
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label class="form-label">Correo electrónico</label>
+                    <input id="login-email" type="email" class="form-control" placeholder="ejemplo@correo.com" required>
+                    <small class="text-danger d-none" id="error-email"></small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>                    
+                    <input id="login-password" type="password" class="form-control" placeholder="Introduce tu contraseña" required>
+                    <small class="text-danger d-none" id="error-password"></small>
+                </div>
+
+                <button id="btn-login" type="submit" class="btn btn-primary w-100 mb-3">Entrar</button>
+
+                <!-- BOTÓN REGISTRARSE -->
+                <div class="row">
+                    <div class="col-6">
+                <a href="registro.html" class="btn btn-outline-dark w-100">
+                    Registrarse
+                </a>
+                </div>
+
+                <div class="col-6">
+                <a href="reset_password.html" class="btn btn-outline-dark w-100">
+                Recuperar Cuenta
+             </a>
+         </div>
+            </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="./js/loggin/loggin.js"></script>
+</body>
+
+</html>

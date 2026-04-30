@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Hotel Luxury</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="./css/bootstrap/bootstrap.min.css">
+
+    <!-- Tus estilos -->
+    <link rel="stylesheet" href="./css/estilos.css">
+</head>
+
+<body class="fondo-login">
+
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card shadow p-4" style="max-width: 450px; width: 100%;">
+
+            <h3 class="text-center mb-4">Crear cuenta</h3>
+            <div id="msg-registro" class="alert d-none mb-3"></div>
+            <form id="registerForm">
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input id="reg-nombre" type="text" class="form-control" placeholder="Introduce tu nombre" required>
+                    <small class="text-danger d-none" id="error-nombre"></small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Apellidos</label>
+                    <input id="reg-apellidos" type="text" class="form-control" placeholder="Introduce tus apellidos" required>
+                    <small class="text-danger d-none" id="error-apellidos"></small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Correo electrónico</label>
+                    <input id="reg-correo" type="email" class="form-control" placeholder="ejemplo@correo.com" required>
+                    <small class="text-danger d-none" id="error-correo"></small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Fecha de nacimiento</label>
+                    <input id="reg-fecha" type="date" class="form-control" required>
+                    <small class="text-danger d-none" id="error-fecha"></small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
+                    <input id="reg-password" type="password" class="form-control" placeholder="Introduce tu contraseña" required>
+                    <small class="text-danger d-none" id="error-password"></small>
+                </div>
+
+                <button id="btn-register" type="submit" class="btn btn-success w-100 mb-3">
+                    Registrarse
+                </button>
+
+
+                <small id="error-general" class="text-danger d-none">
+                    Rellena todos los campos correctamente para continuar.
+                </small>
+
+
+                <a href="loggin.html" class="btn btn-outline-dark w-100">
+                    Volver al inicio de sesión
+                </a>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="./js/register/register.js"></script>
+</body>
+
+</html>

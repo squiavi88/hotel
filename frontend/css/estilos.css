@@ -1,0 +1,382 @@
+.carousel-container {
+    max-width: 850px;   /* ancho máximo de tus imágenes */
+    margin: 0 auto;     /* centrar el carrusel */
+}
+
+.carousel-container img {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+}
+
+video {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Transición suave entre vídeos */
+#videoRestaurante {
+    transition: opacity 0.8s ease-in-out;
+    opacity: 1;
+}
+
+/* Clase que se activa durante el cambio */
+.fade-out {
+    opacity: 0;
+}
+
+/* Control de altura del vídeo */
+.video-restaurante-altura {
+    height: 350px;      /* Ajusta la altura a tu gusto */
+    object-fit: cover;  /* Recorta sin deformar */
+    width: 100%;
+    border-radius: 10px;
+}
+
+
+/*mapa*/
+img.img-fluid {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+
+.carrusel-extendido {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 10px;
+}
+
+.carrusel-extendido img {
+    width: 350px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/*restaurante*/
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid #ddd;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.list-group-item h4 {
+    font-weight: 600;
+}
+
+.list-group-item p {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+
+/*Carrusel de fotos para los EVENTOS*/
+.carrusel-auto {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+}
+
+.carrusel-track {
+    display: flex;
+    gap: 15px;
+    width: max-content;
+    animation: scrollInfinito 55s linear infinite;
+}
+
+.carrusel-track img {
+    width: 350px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* ANIMACIÓN INFINITA REAL SIN SALTOS */
+@keyframes scrollInfinito {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+
+/* Fondo estilo Roblox para la página de login */
+.fondo-login {
+    background: url("../imagenes/collague_fondo.png") no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+}
+
+/* Capa oscura encima del fondo */
+.fondo-login::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    z-index: 0;
+}
+
+/* Para que la tarjeta quede por encima del overlay */
+.fondo-login .card {
+    position: relative;
+    z-index: 1;
+}
+
+/* Fondo estilo Roblox para la página de registro */
+.fondo-registro {
+    background: url("../imagenes/collague_fondo.png") no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+}
+
+/* Capa oscura encima del fondo */
+.fondo-registro::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    z-index: 0;
+}
+
+/* Para que la tarjeta quede por encima del overlay */
+.fondo-registro .card {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* Para el restaurante */
+
+.total-box {
+    background: #f3f3f3;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.reservar-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-anim {
+    transform: scale(0.9);
+    transition: transform 0.1s ease;
+}
+
+.btn-anim-active {
+    transform: scale(1.1);
+}
+
+
+
+/* Para las actividades */
+
+/* ========================================= */
+/* ESTILO DEL TOTAL */
+/* ========================================= */
+
+.total-box {
+    background: #f3f3f3;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border: 1px solid #ddd;
+}
+
+
+/* ========================================= */
+/* BOTÓN RESERVAR DESACTIVADO */
+/* ========================================= */
+
+.reservar-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* ========================================= */
+/* ANIMACIÓN EN BOTONES + Y – */
+/* ========================================= */
+
+.btn-anim-active {
+    transform: scale(1.12);
+    transition: transform 0.12s ease;
+}
+
+
+/* ========================================= */
+/* INPUTS Y SELECTS */
+/* ========================================= */
+
+input.form-control,
+select.form-control {
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+
+/* ========================================= */
+/* TARJETAS DE ACTIVIDADES Y RESTAURANTE */
+/* ========================================= */
+
+.card {
+    border-radius: 12px;
+}
+
+.card h4 {
+    font-weight: 600;
+}
+
+
+/* ========================================= */
+/* BOTONES + Y – */
+/* ========================================= */
+
+.input-group .btn-dark {
+    width: 40px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 0;
+}
+
+
+/* ========================================= */
+/* TEXTO CENTRADO EN INPUTS */
+/* ========================================= */
+
+input.text-center {
+    font-weight: bold;
+}
+
+
+/* ========================================= */
+/* ESPACIADO ENTRE BLOQUES */
+/* ========================================= */
+
+.mb-4 {
+    margin-bottom: 2rem !important;
+}
+
+
+.icono-usuario {
+    width: 26px;
+    height: 26px;
+    border-radius: 100%;
+    background: white;
+    padding: 2px;
+    object-fit: contain;
+}
+
+/* Cambia el color del perfil cuando pasas por encima del raton */
+.icono-usuario:hover {
+    background: #5ad589;
+    transition: 0.2s;
+}
+
+
+.logo-hotel {
+    height: 32px;      /* Ajusta el tamaño del logo */
+    width: auto;
+    object-fit: contain;
+}
+
+
+/* Texto del carrusel */
+.carousel-caption h3,
+.carousel-caption p {
+    color: white !important; /* Cambia este color */
+}
+
+.carousel-caption {
+    background: rgba(0, 0, 0, 0.45); /* Fondo oscuro transparente */
+    padding: 15px;
+    border-radius: 8px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+[id] {
+    scroll-margin-top: 90px; /* Ajusta según la altura de tu navbar */
+}
+
+.actividad-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.actividad-link:hover {
+    opacity: 0.85;
+    cursor: pointer;
+}
+
+
+
+/* Tarjeta */
+.modal-pago-premium {
+    background: #111827;
+    color: #f9fafb;
+    border-radius: 12px;
+    border: 1px solid #fbbf24;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+}
+
+.modal-pago-premium .modal-title {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.icono-tarjeta {
+    font-size: 1.6rem;
+}
+
+.campo-pago {
+    background-color: #020617;
+    border: 1px solid #4b5563;
+    color: #e5e7eb;
+}
+
+.campo-pago:focus {
+    border-color: #fbbf24;
+    box-shadow: 0 0 0 0.2rem rgba(251,191,36,0.25);
+}
+
+.btn-gold {
+    background: linear-gradient(90deg, #fbbf24, #f59e0b);
+    border: none;
+    color: #111827;
+    font-weight: 600;
+}
+
+.btn-gold:disabled {
+    opacity: 0.5;
+}
+
+.btn-gold:hover:not(:disabled) {
+    filter: brightness(1.05);
+}
+

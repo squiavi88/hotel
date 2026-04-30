@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurante – Hotel Luxury</title>
+
+    <link rel="stylesheet" href="./css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/estilos.css">
+</head>
+
+<body>
+
+    <!-- BARRA SUPERIOR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="inicio.html">
+                <img src="imagenes/logo.png" alt="Logo" class="logo-hotel me-2">
+                Hotel Luxury
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <!-- MENÚ IZQUIERDA -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="inicio.html">Inicio</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="reservar.html">Reservar</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="restaurante.html">Restaurante</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="actividades.html">Actividades</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="eventos.html">Eventos</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="contacto.html">Contacto</a>
+                    </li>
+                </ul>
+
+                <!-- MENÚ USUARIO -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item d-flex align-items-center me-2">
+                        <span id="nombre-usuario" class="text-white fw-bold"></span>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
+                            <img src="imagenes/perfil.png" class="icono-usuario">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="perfil.html">Mi Perfil</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="cerrarSesion()">Cerrar sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- ESPACIADO SUPERIOR -->
+    <div class="mt-5 pt-4"></div>
+
+    <!-- CARRUSEL EXTENDIDO -->
+    <div class="container mt-4">
+        <h2 class="text-center mb-4">Nuestro Restaurante</h2>
+
+        <div class="carrusel-extendido">
+            <img src="imagenes/RESTAURANT/cook_5.png" alt="">
+            <img src="imagenes/RESTAURANT/cook_2.png" alt="">
+            <img src="imagenes/RESTAURANT/cook_1.png" alt="">
+            <img src="imagenes/RESTAURANT/cook_7.png" alt="">
+            <img src="imagenes/RESTAURANT/cook_8.png" alt="">
+            <img src="imagenes/RESTAURANT/cook_3.png" alt="">
+            <img src="imagenes/RESTAURANT/cook_6.png" alt="">
+            <img src="imagenes/RESTAURANT/cook_4.png" alt="">
+            <img src="imagenes/RESTAURANT/cook_9.png" alt="">
+        </div>
+    </div>
+
+    <!-- BLOQUE ÚNICO DE RESERVA -->
+    <div id="carta" class="container mt-5">
+        <div class="card shadow p-4 mb-4">
+            <h4 class="mb-3">Reserva tu Mesa</h4>
+
+            <div class="row">
+
+                <!-- IMAGEN DINÁMICA -->
+                <div class="col-md-4 d-flex justify-content-center align-items-center">
+                    <img id="imgTurno" src="imagenes/RESTAURANT/cook_4.png" 
+                        class="img-fluid rounded shadow" style="max-height: 250px;">
+                </div>
+
+                <!-- FORMULARIO -->
+                <div class="col-md-8">
+
+                    <!-- FILA 1 -->
+                    <div class="row align-items-end mb-3">
+
+                        <!-- FECHA -->
+                        <div class="col-md-4">
+                            <label>Fecha</label>
+                            <input type="date" class="form-control" id="fechaRestaurante">
+                        </div>
+
+                        <!-- TURNO -->
+                        <div class="col-md-4">
+                            <label>Turno</label>
+                            <select class="form-control" id="turnoRestaurante">
+                                <option value="Selecciona">Selecciona</option>
+                                <option value="desayuno">Desayuno</option>
+                                <option value="comida">Comida</option>
+                                <option value="cena">Cena</option>
+                            </select>
+                        </div>
+
+                        <!-- HORA -->
+                        <div class="col-md-4">
+                            <label>Hora</label>
+                            <select class="form-control" id="horaRestaurante">
+                                <option value="Selecciona">Selecciona</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <!-- FILA 2 -->
+                    <div class="row align-items-end mb-3">
+
+                        <!-- MESA -->
+                        <div class="col-md-4">
+                            <label>Mesa</label>
+                            <div class="input-group">
+                                <button class="btn btn-dark" onclick="cambiarMesa(-1)">−</button>
+                                <input type="text" class="form-control text-center" id="mesaRestaurante" value="Selecciona" readonly>
+                                <button class="btn btn-dark" onclick="cambiarMesa(1)">+</button>
+                            </div>
+                        </div>
+
+                        <!-- PERSONAS -->
+                        <div class="col-md-4">
+                            <label>Personas</label>
+                            <div class="input-group">
+                                <button class="btn btn-dark" onclick="cambiarPersonas(-1)">−</button>
+                                <input type="text" class="form-control text-center" id="personasRestaurante" value="Selecciona" readonly>
+                                <button class="btn btn-dark" onclick="cambiarPersonas(1)">+</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- FILA 3 -->
+                    <div class="row mt-3">
+
+                        <div class="col-md-4">
+                            <button class="btn btn-dark w-100 reservar-btn" id="btnRestaurante" disabled onclick="reservarMesa()">
+                                Reservar
+                            </button>
+                        </div>
+
+                        <div class="col-md-8 d-flex align-items-center justify-content-end">
+                            <div class="total-box">
+                                Total: <span id="totalRestaurante">0 €</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HORARIOS + NORMAS -->
+    <div class="container mt-5 mb-5">
+        <h2 class="text-center mb-4">Horarios del Restaurante</h2>
+
+        <div class="row justify-content-center">
+
+            <div class="col-md-6">
+                <div class="list-group shadow">
+
+                    <div class="list-group-item py-4">
+                        <h4 class="mb-1">Desayuno</h4>
+                        <p class="mb-0">07:00 — 11:30</p>
+                    </div>
+
+                    <div class="list-group-item py-4">
+                        <h4 class="mb-1">Comida</h4>
+                        <p class="mb-0">13:00 — 16:00</p>
+                    </div>
+
+                    <div class="list-group-item py-4">
+                        <h4 class="mb-1">Cena</h4>
+                        <p class="mb-0">19:30 — 23:00</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-5 mt-4 mt-md-0">
+                <div class="card shadow p-4">
+
+                    <h4 class="mb-3">Normas del Restaurante</h4>
+
+                    <p><strong>Vestimenta:</strong> Se requiere ropa adecuada. No se permite acceder en bañador, ropa mojada o sin camiseta. Ropa informal elegante aceptada.</p>
+
+                    <p><strong>Mascotas:</strong> No se permite el acceso de mascotas, excepto perros guía debidamente acreditados.</p>
+
+                    <p><strong>Ambiente:</strong> Para garantizar una experiencia agradable, se ruega mantener un tono de voz moderado.</p>
+
+                    <p><strong>Reservas:</strong> Para el menú gourmet es necesaria reserva previa.</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="./js/global/global.js"></script>
+    <script src="./js/restaurante/restaurante.js"></script>
+
+</body>
+</html>
+
