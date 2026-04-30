@@ -69,7 +69,7 @@ public class ReservaHabitacionesController {
             reservaHabitacion.setHabitacion(habitacion);
             reservaHabitacion.setFechaEntrada(dto.getFechaEntrada());
             reservaHabitacion.setFechaSalida(dto.getFechaSalida());
-            reservaHabitacion.setMonto(habitacion.getPrecioNoche());
+            reservaHabitacion.setMonto(precioTotal);
 
             reservaHabitacionService.save(reservaHabitacion);
 

@@ -1,8 +1,13 @@
 package com.luxury.hotel.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import tools.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Habitacion")
@@ -28,16 +33,29 @@ public class Habitacion {
     @Column(name = "Precio_Noche", nullable = false)
     private BigDecimal precioNoche;
 
-    public Habitacion() {
+    @JsonIgnore
+    @Column(name = "Imagenes", columnDefinition = "json")
+    private String imagenes;
+
+    // ✅ OUTPUT JSON FIELD
+    @JsonProperty("imagenes")
+    public List<String> getImagenes() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(imagenes, List.class);
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
     }
 
-    public Habitacion(Long id, String nombre, String descripcion, Integer numeroHabitacion, String tipoHabitacion, BigDecimal precioNoche) {
-        this.id = id;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.numeroHabitacion = numeroHabitacion;
-        this.tipoHabitacion = tipoHabitacion;
-        this.precioNoche = precioNoche;
+    // ✅ INPUT (saving)
+    public void setImagenes(List<String> imagenesList) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            this.imagenes = mapper.writeValueAsString(imagenesList);
+        } catch (Exception e) {
+            this.imagenes = "[]";
+        }
     }
 
     public Long getId() {
@@ -87,4 +105,5 @@ public class Habitacion {
     public void setPrecioNoche(BigDecimal precioNoche) {
         this.precioNoche = precioNoche;
     }
+
 }

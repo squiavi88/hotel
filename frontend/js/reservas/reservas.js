@@ -1,13 +1,7 @@
 // ===============================
 // PRECIOS POR HABITACIÓN
 // ===============================
-const precios = {
-    1: 36,
-    2: 28,
-    3: 45,
-    4: 60,
-    5: 32
-};
+const precios = {};
 
 // ===============================
 // MOSTRAR MENSAJE DE RESERVA
@@ -60,12 +54,12 @@ async function cargarFechasOcupadas(id) {
 }
 
 async function inicializarCalendarios() {
-    for (let id of [1, 2, 3, 4, 5]) {
+    const entradas = document.querySelectorAll(".entrada");
+    const salidas = document.querySelectorAll(".salida");
 
-        const entradaInput = document.getElementById(`entrada${id}`);
+    entradas.forEach(async (entradaInput) => {
+        const id = entradaInput.id.replace("entrada", "");
         const salidaInput = document.getElementById(`salida${id}`);
-
-        if (!entradaInput || !salidaInput) continue;
 
         const fechasOcupadas = await cargarFechasOcupadas(id);
 
@@ -82,10 +76,11 @@ async function inicializarCalendarios() {
             dateFormat: "Y-m-d",
             onChange: () => actualizarTotal(id)
         });
-    }
+    });
 }
-
-document.addEventListener("DOMContentLoaded", inicializarCalendarios);
+document.addEventListener("DOMContentLoaded", () => {
+    cargarHabitaciones();
+});
 
 // ===============================
 // ACTUALIZAR TOTAL
@@ -95,7 +90,10 @@ function actualizarTotal(id) {
     const salida = document.getElementById(`salida${id}`).value;
 
     const noches = calcularNoches(entrada, salida);
-    const precio = precios[id];
+
+    const card = document.querySelector(`#btn-reservar-${id}`).closest(".card");
+    const precioText = card.querySelector("p.fw-bold").innerText;
+    const precio = parseFloat(precioText.replace(/[^0-9]/g, ""));
 
     const totalSpan = document.getElementById(`total${id}`);
     const boton = document.getElementById(`btn-reservar-${id}`);
@@ -126,10 +124,10 @@ function reservarHabitacion(id) {
     resumen.textContent = `Habitación ${id} · ${noches} noche(s) · Total: ${total} €`;
 
     // limpiar campos
-    ["pagoNombre","pagoNumero","pagoExpiracion","pagoCVV"].forEach(id => {
+    ["pagoNombre", "pagoNumero", "pagoExpiracion", "pagoCVV"].forEach(id => {
         document.getElementById(id).value = "";
     });
-    ["msgNombre","msgNumero","msgExp","msgCVV"].forEach(id => {
+    ["msgNombre", "msgNumero", "msgExp", "msgCVV"].forEach(id => {
         document.getElementById(id).textContent = "";
     });
 
@@ -247,4 +245,101 @@ document.getElementById("btnConfirmarPago").addEventListener("click", async () =
     }
 });
 
+async function cargarHabitaciones() {
+    try {
+        const response = await fetch("http://localhost:8080/hotel/habitaciones", {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
 
+        const habitaciones = await response.json();
+        renderizarHabitaciones(habitaciones);
+
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+
+function renderizarHabitaciones(habitaciones) {
+    const API_URL = "http://localhost:8080";
+    const container = document.getElementById("habitaciones-container");
+
+    container.innerHTML = habitaciones.map(h => {
+
+        precios[h.id] = Number(h.precioNoche);
+
+        const carouselId = `carousel-${h.id}`;
+
+        const safeImages = (h.imagenes && h.imagenes.length > 0)
+            ? h.imagenes
+            : ["/imagenes/placeholder.jpg"];
+
+        const images = (h.imagenes ?? []).map((img, index) => `
+            <div class="carousel-item ${index === 0 ? "active" : ""}">
+                <img src="${API_URL + img}"
+                     class="d-block w-100"
+                     style="height:350px; object-fit:cover;">
+            </div>
+        `).join("");
+
+        return `
+        <div class="card mb-5 shadow">
+            <div class="row g-0">
+
+                <div class="col-md-6">
+                    <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel">
+
+                        <div class="carousel-inner">
+                            ${images}
+                        </div>
+
+                        <button class="carousel-control-prev" type="button"
+                            data-bs-target="#${carouselId}" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+
+                        <button class="carousel-control-next" type="button"
+                            data-bs-target="#${carouselId}" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+
+                    </div>
+                </div>
+
+                <div class="col-md-6 p-4">
+                    <h3>${h.nombre}</h3>
+                    <p>${h.descripcion}</p>
+                    <p class="fw-bold">${h.precioNoche} €</p>
+
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label>Entrada</label>
+                            <input type="text" class="form-control entrada" id="entrada${h.id}">
+                        </div>
+                        <div class="col">
+                            <label>Salida</label>
+                            <input type="text" class="form-control salida" id="salida${h.id}">
+                        </div>
+                    </div>
+
+                    <p class="fw-bold">Total: <span id="total${h.id}">0 €</span></p>
+
+                    <button class="btn btn-dark"
+                            id="btn-reservar-${h.id}"
+                            onclick="reservarHabitacion(${h.id})"
+                            disabled>
+                        Reservar
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        `;
+    }).join("");
+
+    inicializarCalendarios();
+}

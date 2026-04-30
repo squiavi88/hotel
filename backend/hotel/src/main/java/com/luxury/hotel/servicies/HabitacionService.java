@@ -44,6 +44,7 @@ public class HabitacionService implements ServiceInterface<Habitacion, Long> {
         modified.setNumeroHabitacion(habitacion.getNumeroHabitacion());
         modified.setTipoHabitacion(habitacion.getTipoHabitacion());
         modified.setPrecioNoche(habitacion.getPrecioNoche());
+        modified.setImagenes(habitacion.getImagenes());
         return habitacionRepository.save(modified);
     }
 }
