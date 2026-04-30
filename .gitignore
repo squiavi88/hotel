@@ -1,0 +1,13 @@
+# --- FRONTEND ---
+# Ignorar los videos que están dentro de la subcarpeta frontend
+frontend/videos/
+frontend/css/hotel.lnk
+
+# --- BACKEND ---
+# Ignorar archivos de compilación de Java
+backend/hotel/target/
+
+# --- GENERAL (Configuración de Editores) ---
+.idea/
+.vscode/
+*.log
