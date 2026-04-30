@@ -26,12 +26,15 @@ public class ReservaController {
     }
 
     @GetMapping("/reservas")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     public List<Reserva> getAllReservas() { return reservaService.findAll(); }
 
     @GetMapping("/reservas/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     public ResponseEntity<Reserva> getReservaById(@PathVariable Long id) { return ResponseEntity.ok(reservaService.findById(id)); }
 
     @PostMapping("/reservas")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Reserva> createReserva(@RequestBody Reserva reserva) {
 
         
@@ -42,11 +45,13 @@ public class ReservaController {
     }
 
     @PutMapping("/reservas/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Reserva> updateReserva(@PathVariable Long id, @RequestBody Reserva reserva) {
         return ResponseEntity.ok(reservaService.update(id, reserva));
     }
 
     @DeleteMapping("/reservas/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteReserva(@PathVariable Long id) {
         reservaService.deleteById(id);
         return ResponseEntity.noContent().build();

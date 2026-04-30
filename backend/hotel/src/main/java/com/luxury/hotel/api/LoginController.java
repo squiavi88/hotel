@@ -56,7 +56,7 @@ public class LoginController {
             @RequestBody Map<String, String> req,
             HttpServletRequest request
     ) {
-        // 1. Autenticar al usuario
+
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         req.get("email"),
@@ -64,23 +64,16 @@ public class LoginController {
                 )
         );
 
-        // 2. Establecer la autenticación en el Contexto de Seguridad
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        // 3. PERSISTIR LA SESIÓN (Vital para evitar el 403 en la siguiente página)
         HttpSession session = request.getSession(true);
         session.setAttribute(
                 HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                 SecurityContextHolder.getContext()
         );
 
-        // 4. Buscar el usuario para devolver el objeto completo
-        Usuario usuario = usuarioRepository.findByEmail(req.get("email"));
 
-        // Opcional: Limpiar la contraseña antes de enviarla al front por seguridad
-        usuario.setContrasena(null);
-
-        return ResponseEntity.ok(usuario);
+        return ResponseEntity.ok(usuarioRepository.findByEmail(req.get("email")));
     }
 
     // -----------------------------

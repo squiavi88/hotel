@@ -31,18 +31,21 @@ public class ReservaMesaController {
     }
 
     @GetMapping("/reservas-mesas")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     public List<ReservaMesa> getAllReservaMesaas() { return reservaMesaService.findAll(); }
 
     @GetMapping("/reservas-mesas/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     public ResponseEntity<ReservaMesa> getReservaMesaById(@PathVariable Long id) { return ResponseEntity.ok(reservaMesaService.findById(id)); }
 
     @PostMapping("/reservas-mesas")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> createReservaMesa(@RequestBody ReservaMesaDTO dto) {
         try {
             Reserva reserva = reservaRepository.findById(dto.getReservaId())
                     .orElseThrow();
 
-            Mesa mesa = mesaRepository.findById(dto.getMesaId())
+            Mesa mesa = mesaRepository.findById(dto.getMesaId().longValue())
                     .orElseThrow();
 
             BigDecimal precioTotal = dto.getMontoPago();
@@ -68,11 +71,13 @@ public class ReservaMesaController {
     }
 
     @PutMapping("/reservas-mesas/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReservaMesa> updateReservaMesa(@PathVariable Long id, @RequestBody ReservaMesa reservaMesa) {
         return ResponseEntity.ok(reservaMesaService.update(id, reservaMesa));
     }
 
     @DeleteMapping("/reservas-mesas/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteReservaMesa(@PathVariable Long id) {
         reservaMesaService.deleteById(id);
         return ResponseEntity.noContent().build();

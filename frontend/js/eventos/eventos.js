@@ -177,23 +177,41 @@ async function reservarEvento() {
         precioCatering[catering] +
         (participantes * precioPorPersona);
 
-    const userId = localStorage.getItem("userId");
+    const userId = localStorage.getItem("id");
 
-    const evento = {
-        idUsuario: userId,
-        tipo: tipo,
-        fecha: fecha,
-        sala: sala,
-        catering: catering,
-        participantes: participantes,
-        total: total
-    };
+    
 
     try {
-        const response = await fetch("http://localhost:8080/api/eventos", {
+        // 1. Crear reserva
+        const res1 = await fetch("http://localhost:8080/hotel/reservas", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(evento)
+            credentials: "include",
+            body: JSON.stringify({ usuario: { id: userId } })
+        });
+
+        if (!res1.ok) {
+            alert("Error al crear la reserva.");
+            return;
+        }
+        
+
+        const reserva = await res1.json();
+
+
+        const response = await fetch("http://localhost:8080/hotel/reservas-eventos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+                reservaId: reserva.id,
+                eventoId: parseInt(tipo),
+                fecha: fecha,
+                sala: sala,
+                participantes: participantes,
+                catering: catering,
+                monto: total
+            })
         });
 
         if (!response.ok) {

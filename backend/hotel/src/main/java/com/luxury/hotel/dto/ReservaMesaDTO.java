@@ -7,7 +7,7 @@ import java.time.LocalTime;
 public class ReservaMesaDTO {
 
     private Long reservaId;
-    private Long mesaId;
+    private Integer mesaId;
     private LocalDate fecha;
     private LocalTime hora;
     private BigDecimal montoPago;
@@ -15,7 +15,7 @@ public class ReservaMesaDTO {
     public ReservaMesaDTO() {
     }
 
-    public ReservaMesaDTO(Long reservaID, Long mesaId, LocalDate fecha, LocalTime hora, BigDecimal montoPago) {
+    public ReservaMesaDTO(Long reservaID, Integer mesaId, LocalDate fecha, LocalTime hora, BigDecimal montoPago) {
         this.reservaId = reservaId;
         this.mesaId = mesaId;
         this.fecha = fecha;
@@ -31,11 +31,11 @@ public class ReservaMesaDTO {
         this.reservaId = reservaId;
     }
 
-    public Long getMesaId() {
+    public Integer getMesaId() {
         return mesaId;
     }
 
-    public void setMesaId(Long mesaId) {
+    public void setMesaId(Integer mesaId) {
         this.mesaId = mesaId;
     }
 

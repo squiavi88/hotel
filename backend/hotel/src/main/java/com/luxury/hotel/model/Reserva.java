@@ -2,6 +2,7 @@ package com.luxury.hotel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -22,8 +23,9 @@ public class Reserva {
     @Column(name = "Fecha_Registro", nullable = false)
     private LocalDate fechaRegistro;
 
-    @Column(name = "pago_final", precision = 10, scale = 2) // Todo en minúsculas según tu foto
+    @Column(name = "Pago_Final", precision = 10, scale = 2)
     private BigDecimal pagoFinal = BigDecimal.ZERO;
+
 
     @OneToMany(mappedBy = "reserva")
     @JsonIgnore
@@ -45,17 +47,51 @@ public class Reserva {
         this.reservaMesaList = reservaMesaList;
     }
 
-    // Getters y Setters...
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
-    public LocalDate getFechaRegistro() { return fechaRegistro; }
-    public void setFechaRegistro(LocalDate fechaRegistro) { this.fechaRegistro = fechaRegistro; }
-    public BigDecimal getPagoFinal() { return pagoFinal; }
-    public void setPagoFinal(BigDecimal pagoFinal) { this.pagoFinal = pagoFinal; }
-    public List<ReservaHabitacion> getReservaHabitacionList() { return reservaHabitacionList; }
-    public void setReservaHabitacionList(List<ReservaHabitacion> reservaHabitacionList) { this.reservaHabitacionList = reservaHabitacionList; }
-    public List<ReservaMesa> getReservaMesaList() { return reservaMesaList; }
-    public void setReservaMesaList(List<ReservaMesa> reservaMesaList) { this.reservaMesaList = reservaMesaList; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public LocalDate getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(LocalDate fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    public BigDecimal getPagoFinal() {
+        return pagoFinal;
+    }
+
+    public void setPagoFinal(BigDecimal pagoFinal) {
+        this.pagoFinal = pagoFinal;
+    }
+
+    public List<ReservaHabitacion> getReservaHabitacionList() {
+        return reservaHabitacionList;
+    }
+
+    public void setReservaHabitacionList(List<ReservaHabitacion> reservaHabitacionList) {
+        this.reservaHabitacionList = reservaHabitacionList;
+    }
+
+    public List<ReservaMesa> getReservaMesaList() {
+        return reservaMesaList;
+    }
+
+    public void setReservaMesaList(List<ReservaMesa> reservaMesaList) {
+        this.reservaMesaList = reservaMesaList;
+    }
 }

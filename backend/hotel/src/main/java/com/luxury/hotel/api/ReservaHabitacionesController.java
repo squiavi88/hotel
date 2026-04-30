@@ -1,11 +1,8 @@
 package com.luxury.hotel.api;
 
-import com.luxury.hotel.dto.FechasOcupadasDTO;
+import com.luxury.hotel.dto.FechasOcupadas;
 import com.luxury.hotel.dto.ReservaHabitacionDTO;
-import com.luxury.hotel.model.Habitacion;
-import com.luxury.hotel.model.Reserva;
-import com.luxury.hotel.model.ReservaHabitacion;
-import com.luxury.hotel.model.Usuario;
+import com.luxury.hotel.model.*;
 import com.luxury.hotel.repositories.HabitacionRepository;
 import com.luxury.hotel.repositories.ReservaRepository;
 import com.luxury.hotel.repositories.UsuarioRepository;
@@ -19,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -38,9 +36,11 @@ public class ReservaHabitacionesController {
     }
 
     @GetMapping("/reservas-habitaciones")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     public List<ReservaHabitacion> getAllReservaHabitaciones() { return reservaHabitacionService.findAll(); }
 
     @GetMapping("/reservas-habitaciones/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     public ResponseEntity<ReservaHabitacion> getReservaHabitacionById(@PathVariable Long id) { return ResponseEntity.ok(reservaHabitacionService.findById(id)); }
 
     @PostMapping("/reservas-habitaciones")
@@ -85,28 +85,33 @@ public class ReservaHabitacionesController {
     }
 
     @PutMapping("/reservas-habitaciones/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReservaHabitacion> updateReservaHabitacion(@PathVariable Long id, @RequestBody ReservaHabitacion reservaHabitacion) {
         return ResponseEntity.ok(reservaHabitacionService.update(id, reservaHabitacion));
     }
 
     @DeleteMapping("/reservas-habitaciones/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteReservaHabitacion(@PathVariable Long id) {
         reservaHabitacionService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    // En ReservaHabitacionesController.java
+    @GetMapping("/reservas-habitaciones/ocupadas/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    public ResponseEntity<List<FechasOcupadas>> getFechasOcupadas(@PathVariable Long id) {
 
-    @GetMapping("/reservas-habitaciones/ocupadas/{habitacionId}")
-    public ResponseEntity<List<FechasOcupadasDTO>> getFechasOcupadas(@PathVariable Long habitacionId) {
-        List<ReservaHabitacion> reservas = reservaHabitacionService.findByHabitacionId(habitacionId);
+        List<ReservaHabitacion> reservaHabitacionList = reservaHabitacionService.findAll();
+        List<FechasOcupadas> fechasOcupadasList = new ArrayList<>();
 
-        // Mapeamos a un DTO simple para enviar solo lo que el frontend necesita
-        List<FechasOcupadasDTO> fechas = reservas.stream()
-                .map(r -> new FechasOcupadasDTO(r.getFechaEntrada(), r.getFechaSalida()))
-                .toList();
+        for (ReservaHabitacion reservaHabitacion : reservaHabitacionList) {
+            if (reservaHabitacion.getHabitacion().getId().equals(id)) {
+                FechasOcupadas fechas = new FechasOcupadas(reservaHabitacion.getFechaEntrada(), reservaHabitacion.getFechaSalida());
+                fechasOcupadasList.add(fechas);
+            }
+        }
 
-        return ResponseEntity.ok(fechas);
+        return ResponseEntity.ok(fechasOcupadasList);
     }
 
 }

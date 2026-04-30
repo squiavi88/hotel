@@ -1,8 +1,7 @@
 package com.luxury.hotel.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -10,25 +9,26 @@ import java.time.LocalDate;
 @Table(name = "Reserva_Habitacion")
 public class ReservaHabitacion {
 
-    @Id // Usamos Id_Reserva como el identificador principal para Java
-    @Column(name = "Id_Reserva", nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id_Reserva_Habitacion", nullable = false)
     private Long id;
 
     @ManyToOne
-    @JsonIgnore // <--- AÑADE ESTO AQUÍ    @JoinColumn(name = "Id_Reserva", insertable = false, updatable = false)
+    @JoinColumn(name = "Id_Reserva")
     private Reserva reserva;
 
     @ManyToOne
     @JoinColumn(name = "Id_Habitacion")
     private Habitacion habitacion;
 
-    @Column(name = "Fecha_entrada", nullable = false)
+    @Column(name = "Fecha_Entrada", nullable = false)
     private LocalDate fechaEntrada;
 
     @Column(name = "Fecha_Salida", nullable = false)
     private LocalDate fechaSalida;
 
-    @Column(name = "monto", precision = 10, scale = 2, nullable = false)
+    @Column(name = "Monto", precision = 10, scale = 2, nullable = false)
     private BigDecimal monto;
 
     public ReservaHabitacion() {
@@ -43,22 +43,51 @@ public class ReservaHabitacion {
         this.monto = monto;
     }
 
-    // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Reserva getReserva() { return reserva; }
-    public void setReserva(Reserva reserva) { this.reserva = reserva; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Habitacion getHabitacion() { return habitacion; }
-    public void setHabitacion(Habitacion habitacion) { this.habitacion = habitacion; }
+    public Reserva getReserva() {
+        return reserva;
+    }
 
-    public LocalDate getFechaEntrada() { return fechaEntrada; }
-    public void setFechaEntrada(LocalDate fechaEntrada) { this.fechaEntrada = fechaEntrada; }
+    public void setReserva(Reserva reserva) {
+        this.reserva = reserva;
+    }
 
-    public LocalDate getFechaSalida() { return fechaSalida; }
-    public void setFechaSalida(LocalDate fechaSalida) { this.fechaSalida = fechaSalida; }
+    public Habitacion getHabitacion() {
+        return habitacion;
+    }
 
-    public BigDecimal getMonto() { return monto; }
-    public void setMonto(BigDecimal monto) { this.monto = monto; }
+    public void setHabitacion(Habitacion habitacion) {
+        this.habitacion = habitacion;
+    }
+
+    public LocalDate getFechaEntrada() {
+        return fechaEntrada;
+    }
+
+    public void setFechaEntrada(LocalDate fechaEntrada) {
+        this.fechaEntrada = fechaEntrada;
+    }
+
+    public LocalDate getFechaSalida() {
+        return fechaSalida;
+    }
+
+    public void setFechaSalida(LocalDate fechaSalida) {
+        this.fechaSalida = fechaSalida;
+    }
+
+    public BigDecimal getMonto() {
+        return monto;
+    }
+
+    public void setMonto(BigDecimal monto) {
+        this.monto = monto;
+    }
 }

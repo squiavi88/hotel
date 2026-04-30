@@ -183,28 +183,44 @@ function actualizarPrecio() {
 async function reservarMesa() {
     const fecha = document.getElementById("fechaRestaurante").value;
     const turno = document.getElementById("turnoRestaurante").value;
-    const hora = document.getElementById("horaRestaurante").value;
+    const horaInput = document.getElementById("horaRestaurante").value;
     const personas = document.getElementById("personasRestaurante").value;
     const mesa = document.getElementById("mesaRestaurante").value;
 
     const total = preciosTurno[turno] * parseInt(personas);
-    const userId = localStorage.getItem("userId");
+    const userId = localStorage.getItem("id");
 
-    const reserva = {
-        idUsuario: userId,
-        turno: turno,
-        fecha: fecha,
-        hora: hora,
-        mesa: parseInt(mesa),
-        personas: parseInt(personas),
-        total: total
-    };
+    const hora = horaInput.length === 5 ? horaInput + ":00" : horaInput;
 
     try {
-        const response = await fetch("http://localhost:8080/api/restaurante", {
+        // 1. Crear reserva
+        const res1 = await fetch("http://localhost:8080/hotel/reservas", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(reserva)
+            credentials: "include",
+            body: JSON.stringify({ usuario: { id: userId } })
+        });
+
+        if (!res1.ok) {
+            alert("Error al crear la reserva.");
+            return;
+        }
+        
+
+        const reserva = await res1.json();
+
+
+        const response = await fetch("http://localhost:8080/hotel/reservas-mesas", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+                reservaId: reserva.id,
+                mesaId: parseInt(mesa),
+                fecha: fecha,
+                hora: hora,
+                montoPago: total
+            })
         });
 
         if (!response.ok) {

@@ -15,10 +15,10 @@ document.addEventListener("DOMContentLoaded", () => {
 // =====================================
 function cargarDatosUsuario() {
     const nombre = localStorage.getItem("nombre");
-    const apellido = localStorage.getItem("apellido");
+    const apellido = localStorage.getItem("apellidos");
     const email = localStorage.getItem("email");
     const fechaNacimiento = localStorage.getItem("fechaNacimiento");
-    const idUsuario = localStorage.getItem("userId");
+    const idUsuario = localStorage.getItem("id");
 
     document.getElementById("nombreUsuario").innerText = nombre || "Desconocido";
     document.getElementById("apellidoUsuario").innerText = apellido || "Desconocido";
@@ -32,11 +32,23 @@ function cargarDatosUsuario() {
 // CARGAR RESERVAS DEL USUARIO
 // =====================================
 async function cargarReservasUsuario() {
-    const userId = localStorage.getItem("userId");
+    const userId = localStorage.getItem("id");
 
     try {
-        const response = await fetch(`http://localhost:8080/api/reservas/usuario/${userId}`);
+        const response = await fetch(`http://localhost:8080/hotel/reservas/usuario/${userId}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include"
+        });
+
+        
+        if (!response.ok) {
+            throw new Error("Error al cargar reservas");
+        }
+
+        
         const reservas = await response.json();
+        console.log("RESERVAS:", reservas);
 
         const hoy = new Date();
         hoy.setHours(0, 0, 0, 0);
@@ -45,7 +57,7 @@ async function cargarReservasUsuario() {
         const historial = [];
 
         reservas.forEach(r => {
-            const fechaReserva = new Date(r.fecha);
+            const fechaReserva = new Date(r.fecha + "T00:00:00");
             fechaReserva.setHours(0, 0, 0, 0);
 
             if (fechaReserva >= hoy) {
@@ -140,8 +152,10 @@ function confirmarEliminacion(idReserva) {
 // =====================================
 async function eliminarReserva(idReserva) {
     try {
-        const response = await fetch(`http://localhost:8080/api/reservas/${idReserva}`, {
-            method: "DELETE"
+        const response = await fetch(`http://localhost:8080/hotel/reservas/${idReserva}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include"
         });
 
         if (!response.ok) {

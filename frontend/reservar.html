@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,12 +61,11 @@
                     <li class="nav-item d-flex align-items-center me-2">
                         <span id="nombre-usuario" class="text-white fw-bold"></span>
                     </li>
-                    <!-- Icono + menú -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#"
-                            data-bs-toggle="dropdown">
-                            <img src="imagenes/perfil.png" class="icono-usuario">
-                        </a>
+                <!-- Icono + menú -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
+                        <img src="imagenes/perfil.png" class="icono-usuario">
+                    </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="perfil.html">Mi Perfil</a></li>
                             <li><a class="dropdown-item" href="#" onclick="cerrarSesion()">Cerrar sesión</a></li>
@@ -78,86 +76,392 @@
         </div>
     </nav>
 
-    <div class="mt-5 pt-4"></div>
+<div class="mt-5 pt-4"></div>
 
-    <div class="container mt-4">
-        <h2 class="text-center mb-4">Habitaciones Disponibles</h2>
-        <div id="msg-reserva" class="alert d-none mb-3 text-center"></div>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Habitaciones Disponibles</h2>
+    <div id="msg-reserva" class="alert d-none mb-3 text-center"></div>
 
-        <!-- Aqui empezamos a renderizar desde JS -->
+    <!-- ========================= -->
+    <!-- HABITACIÓN 1 - PREMIUM -->
+    <!-- ========================= -->
+    <div id="premium" class="card mb-5 shadow">
+        <div class="row g-0">
 
-        <div id="contenedor-habitaciones">
+            <!-- Carrusel -->
+            <div class="col-md-6">
+                <div id="carousel1" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+
+                        <div class="carousel-item active">
+                            <img src="imagenes/ROOMS/DOS/room_2.1.png" class="d-block w-100">
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="imagenes/ROOMS/DOS/room_2.2.png" class="d-block w-100">
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="imagenes/ROOMS/DOS/room_2.3.png" class="d-block w-100">
+                        </div>
+
+                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel1" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel1" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="col-md-6 p-4">
+                <h3>Habitación Doble Premium</h3>
+                <p>Una habitación cómoda y luminosa con cama doble, baño privado, aire acondicionado y vistas al jardín.</p>
+
+                <p class="fw-bold">Precio por noche: 36 €</p>
+
+                <!-- Fechas -->
+                <div class="row mb-3">
+                    <div class="col">
+                        <label>Entrada</label>
+                        <input type="text" class="form-control" id="entrada1" onchange="actualizarTotal(1)">
+                    </div>
+                    <div class="col">
+                        <label>Salida</label>
+                        <input type="text" class="form-control" id="salida1" onchange="actualizarTotal(1)">
+                    </div>
+                </div>
+
+                <p class="fw-bold">Total: <span id="total1">0 €</span></p>
+
+                <button id="btn-reservar-1" class="btn btn-dark" onclick="reservarHabitacion(1)" disabled>Reservar</button>
+            </div>
+
         </div>
-
-
     </div>
 
+    <!-- ========================= -->
+    <!-- HABITACIÓN 2 - INDIVIDUAL -->
+    <!-- ========================= -->
+    <div id="individual" class="card mb-5 shadow">
+        <div class="row g-0">
 
-    <!-- MODAL DE PAGO PREMIUM -->
-    <div class="modal fade" id="modalPago" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content modal-pago-premium">
+            <!-- Carrusel -->
+            <div class="col-md-6">
+                <div id="carousel2" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
 
-                <div class="modal-header border-0">
-                    <div class="d-flex align-items-center">
-                        <span class="icono-tarjeta me-2">💳</span>
-                        <h5 class="modal-title">Confirmar Pago</h5>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-
-                    <p class="text-gold mb-3" id="resumenPago"></p>
-
-                    <label class="fw-bold text-light">Nombre del titular</label>
-                    <input type="text" id="pagoNombre" class="form-control mb-1 campo-pago">
-                    <small id="msgNombre" class="text-warning d-block mb-2"></small>
-
-                    <label class="fw-bold text-light">Número de tarjeta</label>
-                    <input type="text" id="pagoNumero" class="form-control mb-1 campo-pago" maxlength="19"
-                        placeholder="1234 5678 9012 3456">
-                    <small id="msgNumero" class="text-warning d-block mb-2"></small>
-
-                    <div class="row">
-                        <div class="col-6">
-                            <label class="fw-bold text-light">Fecha de expiración</label>
-                            <input type="month" id="pagoExpiracion" class="form-control mb-1 campo-pago">
-                            <small id="msgExp" class="text-warning d-block mb-2"></small>
+                        <div class="carousel-item active">
+                            <img src="imagenes/ROOMS/UNO/room_1.1.png" class="d-block w-100">
                         </div>
-                        <div class="col-6">
-                            <label class="fw-bold text-light">Código de seguridad</label>
-                            <input type="password" id="pagoCVV" class="form-control mb-1 campo-pago" maxlength="3"
-                                placeholder="***">
-                            <small id="msgCVV" class="text-warning d-block mb-2"></small>
+
+                        <div class="carousel-item">
+                            <img src="imagenes/ROOMS/UNO/room_1.2.png" class="d-block w-100">
                         </div>
+
+                        <div class="carousel-item">
+                            <img src="imagenes/ROOMS/UNO/room_1.3.png" class="d-block w-100">
+                        </div>
+
                     </div>
 
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel2" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel2" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="col-md-6 p-4">
+                <h3>Habitación Individual</h3>
+                <p>Perfecta para viajeros que buscan comodidad y privacidad.</p>
+
+                <p class="fw-bold">Precio por noche: 28 €</p>
+
+                <!-- Fechas -->
+                <div class="row mb-3">
+                    <div class="col">
+                        <label>Entrada</label>
+                        <input type="text" class="form-control" id="entrada2" onchange="actualizarTotal(2)">
+                    </div>
+                    <div class="col">
+                        <label>Salida</label>
+                        <input type="text" class="form-control" id="salida2" onchange="actualizarTotal(2)">
+                    </div>
                 </div>
 
-                <div class="modal-footer border-0">
-                    <button class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
-                    <button id="btnConfirmarPago" class="btn btn-gold" disabled>Confirmar Pago</button>
+                <p class="fw-bold">Total: <span id="total2">0 €</span></p>
+
+                <button id="btn-reservar-2" class="btn btn-dark" onclick="reservarHabitacion(2)" disabled>Reservar</button>
+            </div>
+
+        </div>
+    </div>
+
+<!-- ========================= -->
+<!-- HABITACIÓN 3 - TRIPLE -->
+<!-- ========================= -->
+<div id="triple" class="card mb-5 shadow">
+    <div class="row g-0">
+
+        <!-- Carrusel -->
+        <div class="col-md-6">
+            <div id="carousel3" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+
+                    <div class="carousel-item active">
+                        <img src="imagenes/ROOMS/TRES/room_3.1.png" class="d-block w-100">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="imagenes/ROOMS/TRES/room_3.2.png" class="d-block w-100">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="imagenes/ROOMS/TRES/room_3.3.png" class="d-block w-100">
+                    </div>
+
                 </div>
 
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel3" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel3" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
             </div>
         </div>
+
+        <!-- Descripción -->
+        <div class="col-md-6 p-4">
+            <h3>Habitación Triple</h3>
+            <p>Ideal para familias o grupos pequeños.</p>
+
+            <p class="fw-bold">Precio por noche: 45 €</p>
+
+            <!-- Fechas -->
+            <div class="row mb-3">
+                <div class="col">
+                    <label>Entrada</label>
+                    <input type="text" class="form-control" id="entrada3" onchange="actualizarTotal(3)">
+                </div>
+                <div class="col">
+                    <label>Salida</label>
+                    <input type="text" class="form-control" id="salida3" onchange="actualizarTotal(3)">
+                </div>
+            </div>
+
+            <p class="fw-bold">Total: <span id="total3">0 €</span></p>
+            <button id="btn-reservar-3" class="btn btn-dark" onclick="reservarHabitacion(3)" disabled>Reservar</button>
+        </div>
+
+    </div>
+</div>
+
+
+    <!-- ========================= -->
+    <!-- HABITACIÓN 4 - CUÁDRUPLE -->
+    <!-- ========================= -->
+    <div id="cuatro" class="card mb-5 shadow">
+        <div class="row g-0">
+
+            <!-- Carrusel -->
+            <div class="col-md-6">
+                <div id="carousel4" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+
+                        <div class="carousel-item active">
+                            <img src="imagenes/ROOMS/CUATRO/room_4.1.png" class="d-block w-100">
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="imagenes/ROOMS/CUATRO/room_4.2.png" class="d-block w-100">
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="imagenes/ROOMS/CUATRO/room_4.3.png" class="d-block w-100">
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="imagenes/ROOMS/CUATRO/room_4.4.png" class="d-block w-100">
+                        </div>
+
+                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel4" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel4" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="col-md-6 p-4">
+                <h3>Habitación para Cuatro</h3>
+                <p>Amplia y perfecta para familias grandes.</p>
+
+                <p class="fw-bold">Precio por noche: 60 €</p>
+
+                <!-- Fechas -->
+                <div class="row mb-3">
+                    <div class="col">
+                        <label>Entrada</label>
+                        <input type="text" class="form-control" id="entrada4" onchange="actualizarTotal(4)">
+                    </div>
+                    <div class="col">
+                        <label>Salida</label>
+                        <input type="text" class="form-control" id="salida4" onchange="actualizarTotal(4)">
+                    </div>
+                </div>
+
+                <p class="fw-bold">Total: <span id="total4">0 €</span></p>
+
+                <button id="btn-reservar-4" class="btn btn-dark" onclick="reservarHabitacion(4)" disabled>Reservar</button>
+            </div>
+
+        </div>
     </div>
 
+    <!-- ========================= -->
+    <!-- HABITACIÓN 5 - DOBLE ESTÁNDAR -->
+    <!-- ========================= -->
+    <div id="doble" class="card mb-5 shadow">
+        <div class="row g-0">
+
+            <!-- Carrusel -->
+            <div class="col-md-6">
+                <div id="carousel5" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+
+                        <div class="carousel-item active">
+                            <img src="imagenes/ROOMS/DOS_2/room_2.2.1.png" class="d-block w-100">
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="imagenes/ROOMS/DOS_2/room_2.2.2.png" class="d-block w-100">
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="imagenes/ROOMS/DOS_2/room_2.2.3.png" class="d-block w-100">
+                        </div>
+
+                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel5" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel5" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="col-md-6 p-4">
+                <h3>Habitación Doble Estándar</h3>
+                <p>Una opción económica sin renunciar al confort.</p>
+
+                <p class="fw-bold">Precio por noche: 32 €</p>
+
+                <!-- Fechas -->
+                <div class="row mb-3">
+                    <div class="col">
+                        <label>Entrada</label>
+                        <input type="text" class="form-control" id="entrada5" onchange="actualizarTotal(5)">
+                    </div>
+                    <div class="col">
+                        <label>Salida</label>
+                        <input type="text" class="form-control" id="salida5" onchange="actualizarTotal(5)">
+                    </div>
+                </div>
+
+                <p class="fw-bold">Total: <span id="total5">0 €</span></p>
+
+                <button id="btn-reservar-5" class="btn btn-dark" onclick="reservarHabitacion(5)" disabled>Reservar</button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
 
 
-    <footer class="bg-dark text-white text-center py-3">
-        <p>© 2026 Hotel Luxury — Todos los derechos reservados</p>
-    </footer>
+<!-- MODAL DE PAGO PREMIUM -->
+<div class="modal fade" id="modalPago" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal-pago-premium">
 
-    <!-- Bootstrap JS -->
-    <script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
+      <div class="modal-header border-0">
+        <div class="d-flex align-items-center">
+          <span class="icono-tarjeta me-2">💳</span>
+          <h5 class="modal-title">Confirmar Pago</h5>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="./js/global/global.js"></script>
-    <script src="./js/reservas/reservas.js"></script>
+      <div class="modal-body">
+
+        <p class="text-gold mb-3" id="resumenPago"></p>
+
+        <label class="fw-bold text-light">Nombre del titular</label>
+        <input type="text" id="pagoNombre" class="form-control mb-1 campo-pago">
+        <small id="msgNombre" class="text-warning d-block mb-2"></small>
+
+        <label class="fw-bold text-light">Número de tarjeta</label>
+        <input type="text" id="pagoNumero" class="form-control mb-1 campo-pago" maxlength="19" placeholder="1234 5678 9012 3456">
+        <small id="msgNumero" class="text-warning d-block mb-2"></small>
+
+        <div class="row">
+          <div class="col-6">
+            <label class="fw-bold text-light">Fecha de expiración</label>
+            <input type="month" id="pagoExpiracion" class="form-control mb-1 campo-pago">
+            <small id="msgExp" class="text-warning d-block mb-2"></small>
+          </div>
+          <div class="col-6">
+            <label class="fw-bold text-light">Código de seguridad</label>
+            <input type="password" id="pagoCVV" class="form-control mb-1 campo-pago" maxlength="3" placeholder="***">
+            <small id="msgCVV" class="text-warning d-block mb-2"></small>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer border-0">
+        <button class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+        <button id="btnConfirmarPago" class="btn btn-gold" disabled>Confirmar Pago</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<footer class="bg-dark text-white text-center py-3">
+    <p>© 2026 Hotel Luxury — Todos los derechos reservados</p>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="./js/global/global.js"></script>
+<script src="./js/reservas/reservas.js"></script>
 
 </body>
-
 </html>
+

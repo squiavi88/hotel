@@ -1,9 +1,9 @@
 package com.luxury.hotel.repositories;
 
-import com.luxury.hotel.model.ReservaHabitacion;
+import com.luxury.hotel.model.Actividad;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ReservaHabitacionRepository extends JpaRepository<ReservaHabitacion, Long> {
+public interface AcitvidadRepository extends JpaRepository<Actividad, Long> {
 }
