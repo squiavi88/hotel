@@ -42,21 +42,24 @@ public class ReservaMesaController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> createReservaMesa(@RequestBody ReservaMesaDTO dto) {
         try {
-            Reserva reserva = reservaRepository.findById(dto.getReservaId())
+            Reserva reserva = reservaRepository.findById(dto.getReservaID())
                     .orElseThrow();
 
             Mesa mesa = mesaRepository.findById(dto.getMesaId().longValue())
                     .orElseThrow();
 
-            BigDecimal precioTotal = dto.getMontoPago();
+            // --- LÓGICA DE CÁLCULO ---
+            // Usamos la cantidad de personas del DTO y el precio de la mesa
+            BigDecimal precioTotal = mesa.getPrecioBase().multiply(new BigDecimal(dto.getCantidadPersonas()));
 
             ReservaMesa reservaMesa = new ReservaMesa();
             reservaMesa.setReserva(reserva);
             reservaMesa.setMesa(mesa);
             reservaMesa.setFecha(dto.getFecha());
             reservaMesa.setHora(dto.getHora());
-            reservaMesa.setMontoPago(dto.getMontoPago());
-
+            reservaMesa.setTurno(dto.getTurno());                       // NUEVO: Pasa el turno del DTO al Modelo
+            reservaMesa.setCantidadPersonas(dto.getCantidadPersonas()); // NUEVO: Pasa las personas del DTO al Modelo
+            reservaMesa.setMontoPago(precioTotal);                      // Usamos el total calculado automáticamente
             reservaMesaService.save(reservaMesa);
 
             reserva.setPagoFinal(reserva.getPagoFinal().add(precioTotal));

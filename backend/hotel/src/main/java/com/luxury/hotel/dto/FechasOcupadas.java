@@ -16,6 +16,7 @@ public class FechasOcupadas {
     }
 
     public LocalDate getFechaEntrada() {
+
         return fechaEntrada;
     }
 
@@ -24,6 +25,7 @@ public class FechasOcupadas {
     }
 
     public LocalDate getFechaSalida() {
+
         return fechaSalida;
     }
 

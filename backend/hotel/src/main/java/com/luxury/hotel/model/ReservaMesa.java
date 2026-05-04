@@ -27,8 +27,14 @@ public class ReservaMesa {
     @Column(name = "Fecha", nullable = false)
     private LocalDate fecha;
 
+    @Column(name = "Turno", nullable = false, length = 50) // <-- Nuevo campo
+    private String turno;
+
     @Column(name = "Hora", nullable = false)
     private LocalTime hora;
+
+    @Column(name = "Cantidad_Personas", nullable = false) // <-- Nuevo campo
+    private Integer cantidadPersonas;
 
     @Column(name = "Monto_Pago", precision = 10, scale = 2, nullable = false)
     private BigDecimal montoPago;
@@ -77,6 +83,11 @@ public class ReservaMesa {
         this.fecha = fecha;
     }
 
+    public String getTurno() {return turno;}
+
+    public void setTurno(String turno) {this.turno = turno;}
+
+
     public LocalTime getHora() {
         return hora;
     }
@@ -84,6 +95,11 @@ public class ReservaMesa {
     public void setHora(LocalTime hora) {
         this.hora = hora;
     }
+
+    public Integer getCantidadPersonas() {return cantidadPersonas;}
+
+    public void setCantidadPersonas(Integer cantidadPersonas) {this.cantidadPersonas = cantidadPersonas;}
+
 
     public BigDecimal getMontoPago() {
         return montoPago;
