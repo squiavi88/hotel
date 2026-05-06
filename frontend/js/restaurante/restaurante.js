@@ -182,7 +182,7 @@ function actualizarPrecio() {
 // =====================================
 async function reservarMesa() {
     const fecha = document.getElementById("fechaRestaurante").value;
-    const turno = document.getElementById("turnoRestaurante").value;
+    const turno = document.getElementById("turnoRestaurawnte").value;
     const horaInput = document.getElementById("horaRestaurante").value;
     const personas = document.getElementById("personasRestaurante").value;
     const mesa = document.getElementById("mesaRestaurante").value;

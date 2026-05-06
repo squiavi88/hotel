@@ -42,6 +42,11 @@ public class ReservaMesaService implements ServiceInterface<ReservaMesa, Long> {
         modified.setReserva(reservaMesa.getReserva());
         modified.setMesa(reservaMesa.getMesa());
         modified.setFecha(reservaMesa.getFecha());
+        // --- NUEVOS CAMPOS ---
+        modified.setTurno(reservaMesa.getTurno()); // Actualizamos el turno
+        modified.setCantidadPersonas(reservaMesa.getCantidadPersonas()); // Actualizamos personas
+        // ---------------------
+        modified.setHora(reservaMesa.getHora()); // Importante la hora
         modified.setMontoPago(reservaMesa.getMontoPago());
         return reservaMesaRepository.save(modified);
     }

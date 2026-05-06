@@ -6,10 +6,7 @@ import com.luxury.hotel.model.Mesa;
 import com.luxury.hotel.servicies.MesaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +18,11 @@ public class MesasController {
 
     public MesasController(MesaService mesaService) {
         this.mesaService = mesaService;
+    }
+
+    @GetMapping("/mesas")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    public List<Mesa> getAllMesas() {return mesaService.findAll();
     }
 
     @PostMapping("/mesas")

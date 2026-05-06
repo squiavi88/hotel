@@ -148,7 +148,8 @@
                             <label>Mesa</label>
                             <div class="input-group">
                                 <button class="btn btn-dark" onclick="cambiarMesa(-1)">−</button>
-                                <input type="text" class="form-control text-center" id="mesaRestaurante" value="Selecciona" readonly>
+                                <input type="text" class="form-control text-center" id="mesaRestaurante"
+                                 value="Selecciona" readonly>
                                 <button class="btn btn-dark" onclick="cambiarMesa(1)">+</button>
                             </div>
                         </div>
@@ -157,9 +158,9 @@
                         <div class="col-md-4">
                             <label>Personas</label>
                             <div class="input-group">
-                                <button class="btn btn-dark" onclick="cambiarPersonas(-1)">−</button>
+                                <button class="btn btn-dark" onclick="cambiarPersona(-1)">−</button>
                                 <input type="text" class="form-control text-center" id="personasRestaurante" value="Selecciona" readonly>
-                                <button class="btn btn-dark" onclick="cambiarPersonas(1)">+</button>
+                                <button class="btn btn-dark" onclick="cambiarPersona(1)">+</button>
                             </div>
                         </div>
 
@@ -169,7 +170,7 @@
                     <div class="row mt-3">
 
                         <div class="col-md-4">
-                            <button class="btn btn-dark w-100 reservar-btn" id="btnRestaurante" disabled onclick="reservarMesa()">
+                            <button class="btn btn-dark w-100 reservar-btn" id="btnRestaurante">
                                 Reservar
                             </button>
                         </div>
@@ -235,7 +236,7 @@
     <!-- SCRIPTS -->
     <script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="./js/global/global.js"></script>
-    <script src="./js/restaurante/restaurante.js"></script>
+    <script src="./js/restaurante/mesas.js"></script>
 
 </body>
 </html>

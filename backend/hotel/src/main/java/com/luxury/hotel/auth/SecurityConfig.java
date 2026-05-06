@@ -49,7 +49,7 @@ public class SecurityConfig {
     public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
         org.springframework.web.cors.CorsConfiguration config = new org.springframework.web.cors.CorsConfiguration();
 
-        config.addAllowedOriginPattern("http://127.0.0.1:5500"); // flexible for dev
+        config.addAllowedOriginPattern("http://127.0.0.1:5501"); // flexible for dev
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.setAllowCredentials(true);
