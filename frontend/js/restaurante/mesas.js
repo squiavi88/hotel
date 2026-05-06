@@ -107,14 +107,17 @@ turno.addEventListener("change", function () {
 // RESERVAR (ENVÍO AL BACKEND)
 // =====================================
 
-function reservarMesa() {
+async function reservarMesa() {
+    // 1. Capturamos los valores del formulario
     const fecha = document.getElementById("fechaRestaurante").value;
     const turno = document.getElementById("turnoRestaurante").value;
     const hora = document.getElementById("horaRestaurante").value + ":00";
-    const personas = document.getElementById("personasRestaurante").value;
-    const mesa = document.getElementById("mesaRestaurante").value;
+    const personas = parseInt(document.getElementById("personasRestaurante").value);
 
-    const boton = document.getElementById("btnRestaurante");
+    // 2. CORRECCIÓN CLAVE: Usamos el ID real del array, no el valor del input
+    const mesaIdReal = misMesas[indiceActual].id;
+    const userId = localStorage.getItem("id");
+
 
     // --- CONSULTA DE PRUEBA EN CONSOLA ---
     console.log("------- DATOS DE RESERVA -------");
@@ -122,8 +125,53 @@ function reservarMesa() {
     console.log("Turno:", turno);
     console.log("Hora:", hora);
     console.log("Personas:", personas);
-    console.log("mesa:", mesa);
-
     console.log("--------------------------------");
 
+    // 1. Iniciamos una petición asíncrona (fetch) al servidor para crear la cabecera de la reserva.
+    // El 'await' detiene la ejecución aquí hasta que el servidor responda.
+    try {
+        const res1 = await fetch("http://localhost:8080/hotel/reservas", {
+
+            method: "POST",
+            // Le decimos al servidor que el cuerpo de nuestra petición es un objeto JSON.
+            headers: { "Content-Type": "application/json" },
+
+            // Esto permite enviar las cookies de sesión (como el JSESSIONID de Spring Security) 
+            // para que el servidor sepa quién eres.
+            credentials: "include",
+
+            // Convertimos el objeto de JavaScript a una cadena de texto JSON para el transporte.
+            // Enviamos el 'id' del usuario para que la base de datos sepa a quién pertenece la reserva.
+            body: JSON.stringify({ usuario: { id: userId } })
+        });
+
+        // Una vez que el servidor responde (res1), extraemos el contenido de la respuesta.
+        // .json() también es asíncrono, por lo que usamos 'await'. 
+        // Aquí es donde recibes el objeto completo desde Java, incluyendo el 'id' que la BD generó automáticamente.
+        const reserva = await res1.json();
+
+        // PASO 2: Asignar la mesa con el ID correcto
+        const datosMesa = {
+            reservaID: reserva.id, // ID autogenerado que acabamos de recibir
+            mesaId: mesaIdReal,    //
+            fecha: fecha,
+            turno: turno,
+            hora: hora,
+            cantidadPersonas: personas
+        };
+
+        const res2 = await fetch("http://localhost:8080/hotel/reservas-mesas", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(datosMesa)
+        });
+
+        if (res2.ok) alert("¡Reserva completada!");
+
+    } catch (error) {
+
+        console.log("error")
+    }
 }
+document.getElementById("btnRestaurante").addEventListener("click", reservarMesa);

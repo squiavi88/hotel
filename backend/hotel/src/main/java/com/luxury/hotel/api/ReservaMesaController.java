@@ -39,7 +39,7 @@ public class ReservaMesaController {
     public ResponseEntity<ReservaMesa> getReservaMesaById(@PathVariable Long id) { return ResponseEntity.ok(reservaMesaService.findById(id)); }
 
     @PostMapping("/reservas-mesas")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     public ResponseEntity<?> createReservaMesa(@RequestBody ReservaMesaDTO dto) {
         try {
             Reserva reserva = reservaRepository.findById(dto.getReservaID())
