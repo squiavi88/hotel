@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,7 +61,8 @@
                     </li>
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#"
+                            data-bs-toggle="dropdown">
                             <img src="imagenes/perfil.png" class="icono-usuario">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -129,14 +131,7 @@
                             <label>Actividad</label>
                             <select class="form-control" id="actividadSeleccionada">
                                 <option value="Selecciona">Selecciona</option>
-                                <option value="1">Tirolina</option>
-                                <option value="2">Aquagym</option>
-                                <option value="3">Gimnasio</option>
-                                <option value="4">Masaje</option>
-                                <option value="5">Spa</option>
-                                <option value="6">Espectáculo</option>
-                                <option value="7">Parque Acuático</option>
-                                <option value="8">Buceo</option>
+
                             </select>
                         </div>
 
@@ -155,7 +150,8 @@
                             <label>Participantes</label>
                             <div class="input-group">
                                 <button class="btn btn-dark" onclick="cambiarParticipantes(-1)">−</button>
-                                <input type="text" class="form-control text-center" id="participantesActividad" value="Selecciona" readonly>
+                                <input type="text" class="form-control text-center" id="participantesActividad"
+                                    value="0">
                                 <button class="btn btn-dark" onclick="cambiarParticipantes(1)">+</button>
                             </div>
                         </div>
@@ -166,7 +162,7 @@
                     <div class="row mt-3">
 
                         <div class="col-md-3">
-                            <button class="btn btn-dark w-100 reservar-btn" id="btnActividad" disabled onclick="reservarActividad()">
+                            <button class="btn btn-dark w-100 reservar-btn" id="btnActividad" >
                                 Reservar
                             </button>
                         </div>
@@ -186,7 +182,7 @@
 
     <!-- BOTÓN DE INFORMACIÓN -->
     <div class="container text-center mb-5">
-        <button onclick="mostrarNormasActividades()" class="btn btn-dark btn-lg">
+        <button  class="btn btn-dark btn-lg">
             Información Adicional
         </button>
     </div>
@@ -226,4 +222,5 @@
     <script src="./js/actividades/actividades.js"></script>
 
 </body>
+
 </html>

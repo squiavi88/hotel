@@ -1,6 +1,7 @@
 package com.luxury.hotel.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -25,6 +26,7 @@ public class ReservaMesa {
     private Mesa mesa;
 
     @Column(name = "Fecha", nullable = false)
+
     private LocalDate fecha;
 
     @Column(name = "Turno", nullable = false, length = 50) // <-- Nuevo campo

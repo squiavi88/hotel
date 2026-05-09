@@ -50,4 +50,5 @@ public class ReservaMesaService implements ServiceInterface<ReservaMesa, Long> {
         modified.setMontoPago(reservaMesa.getMontoPago());
         return reservaMesaRepository.save(modified);
     }
+
 }

@@ -30,7 +30,7 @@ public class ReservaActividadController {
         this.actividadService = actividadService;
     }
 
-    @GetMapping("/reservas-actividades")
+    @GetMapping("/<reservas-actividades>")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     public List<ReservaActividad> getAllReservaActividades() { return reservaActividadService.findAll(); }
 
@@ -43,11 +43,13 @@ public class ReservaActividadController {
     public ResponseEntity<?> createReservaActividad(@RequestBody ReservaActividadDTO dto) {
 
         try {
+            // 1. Buscamos las entidades relacionadas
             Reserva reserva = reservaService.findById(dto.getReservaId());
 
             Actividad actividad = actividadService.findById(dto.getActividadId());
-
-            BigDecimal precioTotal = actividad.getPrecioBase().multiply(BigDecimal.valueOf(dto.getParticipantes()));
+            // 2. LÓGICA DE CÁLCULO EN EL BACKEND
+            // Multiplicamos el precio base de la BD por los participantes del DTO
+            BigDecimal precioCalculado = actividad.getPrecioBase().multiply(BigDecimal.valueOf(dto.getParticipantes()));
 
             ReservaActividad reservaActividad = new ReservaActividad();
             reservaActividad.setReserva(reserva);
@@ -55,11 +57,16 @@ public class ReservaActividadController {
             reservaActividad.setTurno(dto.getTurno());
             reservaActividad.setFecha(dto.getFecha());
             reservaActividad.setParticipantes(dto.getParticipantes());
-            reservaActividad.setMonto(dto.getMonto());
+            // CAMBIO CRÍTICO: Usamos 'precioCalculado' (del server) NO 'dto.getMonto()' (del front)
+            reservaActividad.setMonto(precioCalculado);
 
             reservaActividadService.save(reservaActividad);
 
-            reserva.setPagoFinal(reserva.getPagoFinal().add(precioTotal));
+            BigDecimal pagoActual = reserva.getPagoFinal();
+            if (pagoActual == null) {
+                pagoActual = BigDecimal.ZERO; // Si es null, lo tratamos como 0
+            }
+            reserva.setPagoFinal(reserva.getPagoFinal().add(precioCalculado));
             reservaService.update(reserva.getId(), reserva);
 
             return ResponseEntity.ok(reservaActividad);

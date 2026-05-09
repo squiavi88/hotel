@@ -18,14 +18,17 @@ public class Actividad {
 
     @Column(name = "Precio_Base", nullable = false)
     private BigDecimal precioBase;
+    @Column(name = "capacidad_Maxima", nullable = false)
+    private Long capacidad;
 
     public Actividad() {
     }
 
-    public Actividad(Long id, String nombre, BigDecimal precioBase) {
+    public Actividad(Long id, String nombre, BigDecimal precioBase, Long capacidad ) {
         this.id = id;
         this.nombre = nombre;
         this.precioBase = precioBase;
+        this.capacidad = capacidad;
     }
 
     public Long getId() {
@@ -50,5 +53,13 @@ public class Actividad {
 
     public void setPrecioBase(BigDecimal precioBase) {
         this.precioBase = precioBase;
+    }
+
+    public Long getCapacidad() {
+        return capacidad;
+    }
+
+    public void setCapacidad(Long capacidad) {
+        this.capacidad = capacidad;
     }
 }

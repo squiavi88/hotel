@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurante – Hotel Luxury</title>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="./css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="./css/estilos.css">
 </head>
@@ -60,7 +61,8 @@
                     </li>
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#"
+                            data-bs-toggle="dropdown">
                             <img src="imagenes/perfil.png" class="icono-usuario">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -103,8 +105,8 @@
 
                 <!-- IMAGEN DINÁMICA -->
                 <div class="col-md-4 d-flex justify-content-center align-items-center">
-                    <img id="imgTurno" src="imagenes/RESTAURANT/cook_4.png" 
-                        class="img-fluid rounded shadow" style="max-height: 250px;">
+                    <img id="imgTurno" src="imagenes/RESTAURANT/cook_4.png" class="img-fluid rounded shadow"
+                        style="max-height: 250px;">
                 </div>
 
                 <!-- FORMULARIO -->
@@ -114,9 +116,11 @@
                     <div class="row align-items-end mb-3">
 
                         <!-- FECHA -->
+
                         <div class="col-md-4">
                             <label>Fecha</label>
-                            <input type="date" class="form-control" id="fechaRestaurante">
+                            <input type="text" id="fechaRestaurante" class="form-control" placeholder="Selecciona fecha"
+                                readonly>
                         </div>
 
                         <!-- TURNO -->
@@ -148,8 +152,7 @@
                             <label>Mesa</label>
                             <div class="input-group">
                                 <button class="btn btn-dark" onclick="cambiarMesa(-1)">−</button>
-                                <input type="text" class="form-control text-center" id="mesaRestaurante"
-                                 value="Selecciona" readonly>
+                                <input type="text" class="form-control text-center" id="mesaRestaurante" readonly>
                                 <button class="btn btn-dark" onclick="cambiarMesa(1)">+</button>
                             </div>
                         </div>
@@ -159,7 +162,8 @@
                             <label>Personas</label>
                             <div class="input-group">
                                 <button class="btn btn-dark" onclick="cambiarPersona(-1)">−</button>
-                                <input type="text" class="form-control text-center" id="personasRestaurante" value="Selecciona" readonly>
+                                <input type="text" class="form-control text-center" id="personasRestaurante"
+                                    value="Selecciona" readonly>
                                 <button class="btn btn-dark" onclick="cambiarPersona(1)">+</button>
                             </div>
                         </div>
@@ -170,7 +174,8 @@
                     <div class="row mt-3">
 
                         <div class="col-md-4">
-                            <button class="btn btn-dark w-100 reservar-btn" id="btnRestaurante">
+
+                            <button id="btnRestaurante" class="btn btn-dark w-100" disabled style="opacity: 0.5;">
                                 Reservar
                             </button>
                         </div>
@@ -220,11 +225,14 @@
 
                     <h4 class="mb-3">Normas del Restaurante</h4>
 
-                    <p><strong>Vestimenta:</strong> Se requiere ropa adecuada. No se permite acceder en bañador, ropa mojada o sin camiseta. Ropa informal elegante aceptada.</p>
+                    <p><strong>Vestimenta:</strong> Se requiere ropa adecuada. No se permite acceder en bañador, ropa
+                        mojada o sin camiseta. Ropa informal elegante aceptada.</p>
 
-                    <p><strong>Mascotas:</strong> No se permite el acceso de mascotas, excepto perros guía debidamente acreditados.</p>
+                    <p><strong>Mascotas:</strong> No se permite el acceso de mascotas, excepto perros guía debidamente
+                        acreditados.</p>
 
-                    <p><strong>Ambiente:</strong> Para garantizar una experiencia agradable, se ruega mantener un tono de voz moderado.</p>
+                    <p><strong>Ambiente:</strong> Para garantizar una experiencia agradable, se ruega mantener un tono
+                        de voz moderado.</p>
 
                     <p><strong>Reservas:</strong> Para el menú gourmet es necesaria reserva previa.</p>
 
@@ -234,10 +242,11 @@
     </div>
 
     <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="./js/global/global.js"></script>
     <script src="./js/restaurante/mesas.js"></script>
 
 </body>
-</html>
 
+</html>
