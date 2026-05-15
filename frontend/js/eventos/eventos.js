@@ -1,188 +1,152 @@
-// =====================================
-// CONFIGURACIÓN GENERAL
-// =====================================
+/**
+ * ============================================================
+ * VARIABLES GLOBALES Y CONFIGURACIÓN INICIAL
+ * ============================================================
+ */
 
-// Precio por persona
-const precioPorPersona = 15;
+let listaActividades = []; // Almacena las actividades traídas del servidor
+let reservasOcupadas = [];
+// Configuración del calendario Flatpickr
+const calendarioEvento = flatpickr("#fechaEvento", {
+    minDate: "today",
+    dateFormat: "Y-m-d",
+    disableMobile: true,
+    // BLOQUEO DE FECHAS SEGÚN SALA
+    disable: [
+        function(date) {
+            const sala = document.getElementById("salaEvento").value;
+            if (!sala || sala === "Selecciona") return false;
 
-// Precios por sala
-const precioSala = {
-    "Mediana": 75,
-    "Grande": 150
-};
+            const d = date.getDate().toString().padStart(2, '0');
+            const m = (date.getMonth() + 1).toString().padStart(2, '0');
+            const y = date.getFullYear();
+            const fechaFormateada = `${y}-${m}-${d}`;
 
-// Precios por catering
-const precioCatering = {
-    "Clásico": 200,
-    "Gourmet": 400
-};
-
-// Registro temporal de fechas reservadas (solo UX)
-let fechasReservadas = {};
-
-
-// =====================================
-// FECHA MÍNIMA = HOY
-// =====================================
-document.addEventListener("DOMContentLoaded", () => {
-    const hoy = new Date();
-    const yyyy = hoy.getFullYear();
-    const mm = String(hoy.getMonth() + 1).padStart(2, "0");
-    const dd = String(hoy.getDate()).padStart(2, "0");
-    const fechaHoy = `${yyyy}-${mm}-${dd}`;
-
-    const inputFecha = document.getElementById("fechaEvento");
-    if (inputFecha) inputFecha.min = fechaHoy;
-
-    // Animación botones
-    document.querySelectorAll(".btn-dark").forEach(btn => {
-        btn.addEventListener("click", () => {
-            btn.classList.add("btn-anim-active");
-            setTimeout(() => btn.classList.remove("btn-anim-active"), 120);
-        });
-    });
+            return reservasOcupadas.some(r => r.sala === sala && r.fecha === fechaFormateada);
+        }
+    ],
+    // ESTO VALIDA EL BOTÓN AL ELEGIR FECHA
+    onChange: function (selectedDates, dateStr, instance) {
+        validarReservaEvento();
+    }
 });
 
+/**
+ * ============================================================
+ * CARGA DE DATOS (FETCH INICIAL)
+ * ============================================================
+ */
 
-// =====================================
-// VALIDAR FORMULARIO
-// =====================================
-function validarEvento() {
-    const tipo = document.getElementById("tipoEvento").value;
-    const fecha = document.getElementById("fechaEvento").value;
-    const sala = document.getElementById("salaEvento").value;
-    const catering = document.getElementById("cateringEvento").value;
-    const participantes = document.getElementById("participantesEvento").value;
+async function cargarEventos() {
+    // Petición al backend para obtener el catálogo de actividades
+    const respuesta = await fetch('http://localhost:8080/hotel/evento', {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include" // Permite enviar cookies de sesión
+    })
 
-    const boton = document.getElementById("btnEvento");
+    const datos = await respuesta.json();
+    listaActividades = datos;
 
-    // Validación de fecha pasada
-    if (fecha) {
-        const hoy = new Date();
-        hoy.setHours(0,0,0,0);
-        const f = new Date(fecha);
-        if (f < hoy) {
-            boton.disabled = true;
-            return;
-        }
+    const select = document.getElementById("tipoEvento");
+    select.innerHTML = '<option value="">Selecciona una actividad</option>';
+
+    // Llenamos el select dinámicamente
+    datos.forEach(actividad => {
+        const option = document.createElement("option");
+        option.value = actividad.id;
+        option.textContent = actividad.nombre;
+
+        // Guardamos precio y capacidad técnica en el dataset de la etiqueta <option>
+        option.dataset.capacidad = actividad.capacidad;
+        option.dataset.precio = actividad.precioBase;
+        select.appendChild(option);
+        // Evento para resetear el contador de personas al cambiar de Evento
+
+        select.addEventListener("change", function () {
+            const inputPars = document.getElementById("participantesEvento");
+            if (this.value !== "") {
+                inputPars.value = 1; // Volver a 1 siempre
+                //actualizarPrecioEvento();
+            }
+            inputPars.value = " ";
+        });
+    });
+}
+// Llamada inmediata para cargar los datos al abrir la página
+cargarEventos()
+
+/**
+ * ============================================================
+ * LÓGICA DE INTERFAZ (Contador y Precios)
+ * ============================================================
+ */
+
+function cambiarParticipantesEvento(valorRecibido) {
+    const inputPars = document.getElementById("participantesEvento");
+    const select = document.getElementById("tipoEvento");
+    // Si no han elegido evento, no dejes sumar personas
+    if (select.value === "") return;
+    const opcionElegida = select.options[select.selectedIndex];
+
+    // Extraemos el límite actual (puede ser la capacidad total o los cupos reales del servidor)
+    const limiteReal = parseInt(opcionElegida.dataset.capacidad);
+
+    // Calculamos la nueva cantidad sumando el paso (1 o -1)
+    let nuevaCantidad = (parseInt(inputPars.value) || 0) + valorRecibido;
+
+    // Solo actualizamos el input si el número está entre 1 y el límite permitido
+    if (nuevaCantidad >= 1 && nuevaCantidad <= limiteReal) {
+        inputPars.value = nuevaCantidad;
+         actualizarPrecio();
     }
-
-    // Validación de campos
-    if (
-        tipo === "Selecciona" ||
-        !fecha ||
-        sala === "Selecciona" ||
-        catering === "Selecciona" ||
-        participantes === "Selecciona"
-    ) {
-        boton.disabled = true;
-        return;
-    }
-
-    // Solapamiento (solo UX)
-    if (fechasReservadas[fecha]) {
-        boton.disabled = true;
-        boton.style.opacity = "0.5";
-        return;
-    }
-
-    boton.disabled = false;
-    boton.style.opacity = "1";
 }
 
+/**
+ * ============================================================
+ * FECHAS OCUPADAS
+ * ============================================================
+ */
 
-// =====================================
-// CAMBIAR PARTICIPANTES
-// =====================================
-function cambiarParticipantesEvento(cambio) {
-    const id = "participantesEvento";
-    let valorActual = document.getElementById(id).value;
-
-    let participantes = valorActual === "Selecciona" ? 0 : parseInt(valorActual);
-    if (isNaN(participantes)) participantes = 0;
-
-    participantes += cambio;
-
-    if (participantes < 0) participantes = 0;
-    if (participantes > 80) participantes = 80;
-
-    document.getElementById(id).value = participantes === 0 ? "Selecciona" : participantes;
-
-    actualizarPrecioEvento();
-    validarEvento();
-}
-
-
-// =====================================
-// ACTUALIZAR PRECIO
-// =====================================
-function actualizarPrecioEvento() {
-    const sala = document.getElementById("salaEvento").value;
-    const catering = document.getElementById("cateringEvento").value;
-    const participantesValor = document.getElementById("participantesEvento").value;
-
-    const totalId = "totalEvento";
-
-    if (
-        sala === "Selecciona" ||
-        catering === "Selecciona" ||
-        participantesValor === "Selecciona"
-    ) {
-        document.getElementById(totalId).innerText = "0 €";
-        return;
+async function cargarFechasOcupadas() {
+    try {
+        const res = await fetch("http://localhost:8080/hotel/eventos/ocupados");
+        reservasOcupadas = await res.json();
+        calendarioEvento.redraw(); 
+    } catch (error) {
+        console.error("Error cargando fechas ocupadas:", error);
     }
-
-    const participantes = parseInt(participantesValor);
-
-    const total =
-        precioSala[sala] +
-        precioCatering[catering] +
-        (participantes * precioPorPersona);
-
-    document.getElementById(totalId).innerText = total + " €";
 }
 
+// Ejecución inicial
+cargarEventos();
+cargarFechasOcupadas();
 
-// =====================================
-// RESERVAR EVENTO (ENVÍO AL BACKEND)
-// =====================================
+// Al cambiar sala, refresca el bloqueo de fechas en el calendario
+document.getElementById("salaEvento").addEventListener("change", () => {
+    calendarioEvento.redraw();
+    validarReservaEvento();
+});
+
+/**
+ * ============================================================
+ * PROCESO DE RESERVA (POST)
+ * ============================================================
+ */
+
 async function reservarEvento() {
-    const tipo = document.getElementById("tipoEvento").value;
     const fecha = document.getElementById("fechaEvento").value;
+    const selectElement = document.getElementById("tipoEvento");
+    const idEvento = selectElement.value;
     const sala = document.getElementById("salaEvento").value;
     const catering = document.getElementById("cateringEvento").value;
-    const participantesValor = document.getElementById("participantesEvento").value;
 
-    if (
-        tipo === "Selecciona" ||
-        !fecha ||
-        sala === "Selecciona" ||
-        catering === "Selecciona" ||
-        participantesValor === "Selecciona"
-    ) {
-        alert("Debes completar todos los campos.");
-        return;
-    }
 
-    // Solapamiento UX
-    if (fechasReservadas[fecha]) {
-        alert("Ya existe un evento reservado para la fecha " + fecha + ".");
-        return;
-    }
-
-    const participantes = parseInt(participantesValor);
-
-    const total =
-        precioSala[sala] +
-        precioCatering[catering] +
-        (participantes * precioPorPersona);
-
-    const userId = localStorage.getItem("id");
-
-    
+    const personas = parseInt(document.getElementById("participantesEvento").value);
+    const userId = localStorage.getItem("id"); // Recuperamos el ID del usuario logueado
 
     try {
-        // 1. Crear reserva
+        // PASO 1: Creamos la Reserva Maestra vinculada al usuario
         const res1 = await fetch("http://localhost:8080/hotel/reservas", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -190,66 +154,99 @@ async function reservarEvento() {
             body: JSON.stringify({ usuario: { id: userId } })
         });
 
-        if (!res1.ok) {
-            alert("Error al crear la reserva.");
-            return;
-        }
-        
+        const reserva = await res1.json(); // Obtenemos el ID de reserva generado por la BD
 
-        const reserva = await res1.json();
+        // PASO 2: Vinculamos la actividad específica a esa reserva maestra
+        const datosEvento = {
+            reservaId: reserva.id,
+            eventoId: idEvento,
+            fecha: fecha,
+            participantes: personas,
+            sala: sala,
+            catering: catering,
+        };
 
 
-        const response = await fetch("http://localhost:8080/hotel/reservas-eventos", {
+        const res2 = await fetch("http://localhost:8080/hotel/reservas-eventos", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify({
-                reservaId: reserva.id,
-                eventoId: parseInt(tipo),
-                fecha: fecha,
-                sala: sala,
-                participantes: participantes,
-                catering: catering,
-                monto: total
-            })
+            body: JSON.stringify(datosEvento)
         });
 
-        if (!response.ok) {
-            alert("Error al realizar la reserva.");
-            return;
-        }
-
-        // Guardar solapamiento UX
-        fechasReservadas[fecha] = true;
-
-        alert("Reserva realizada correctamente.");
-
-        validarEvento();
+        if (res2.ok) {
+            alert("¡Reserva completada!");
+            // Refrescamos disponibilidad para que el dataset se actualice tras la reserva
+        };
 
     } catch (error) {
-        alert("Error al conectar con el servidor.");
+        console.error("Mensaje de error:", error.message);
     }
 }
 
+// Vinculamos la función de reserva al botón principal
 
-// =====================================
-// EVENTOS DE CAMBIO
-// =====================================
-["tipoEvento", "fechaEvento", "salaEvento", "cateringEvento"].forEach(id => {
-    const elemento = document.getElementById(id);
-    if (elemento) {
-        elemento.addEventListener("change", () => {
-            actualizarPrecioEvento();
-            validarEvento();
-        });
+document.getElementById("btnEvento").addEventListener("click", reservarEvento);
+
+/**
+ * ============================================================
+ * LÓGICA DE VALIDACIÓN (Activar/Desactivar Botón)
+ * ============================================================
+ */
+
+function validarReservaEvento() {
+    const fecha = document.getElementById("fechaEvento").value;
+    const tipo = document.getElementById("tipoEvento").value;
+    const sala = document.getElementById("salaEvento").value;
+        const catering = document.getElementById("cateringEvento").value;
+
+    const boton = document.getElementById("btnEvento");
+
+    if (fecha && tipo && sala && catering !== "Selecciona") {
+        boton.disabled = false;
+        boton.style.opacity = "1";
+        boton.style.cursor = "pointer";
+    } else {
+        boton.disabled = true;
+        boton.style.opacity = "0.5";
+        // boton.style.cursor = "not-allowed";
     }
-});
+}
+document.getElementById("tipoEvento").addEventListener("change", validarReservaEvento);
+document.getElementById("salaEvento").addEventListener("change", validarReservaEvento);
+document.getElementById("cateringEvento").addEventListener("change", validarReservaEvento);
+validarReservaEvento();
 
 
-function accederReservaEvento() {
-    const modal = new bootstrap.Modal(document.getElementById("modalNormasEventos"));
-    modal.show();
+/**
+ * ============================================================
+ * CÁLCULO DE PRECIOS
+ * ============================================================
+ */
+
+function actualizarPrecio() {
+    const select = document.getElementById("tipoEvento");
+    const inputPars = document.getElementById("participantesEvento");
+    const displayTotal = document.getElementById("totalEvento");
+
+    // 1. Obtenemos la opción seleccionada
+    const opcionElegida = select.options[select.selectedIndex];
+
+    // 2. Extraemos el precio del dataset (que guardaste al cargar las actividades)
+    const precioBase = parseFloat(opcionElegida.dataset.precio) || 0;
+    const cantidad = parseInt(inputPars.value) || 0;
+
+    // 3. Calculamos y mostramos
+    const total = precioBase * cantidad;
+    displayTotal.textContent = total + " €";
 }
 
+/**
+ * ============================================================
+ * RESETEAR FORMULARIO
+ * ============================================================
+ */
 
-
+function resetearFormularioEventos() {
+    location.reload(); // La forma más segura de limpiar todo
+}

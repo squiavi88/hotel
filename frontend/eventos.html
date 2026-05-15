@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,12 @@
 
     <link rel="stylesheet" href="./css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="./css/estilos.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body>
 
-        <!-- BARRA SUPERIOR -->
+    <!-- BARRA SUPERIOR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="inicio.html">
@@ -61,11 +63,12 @@
                     <li class="nav-item d-flex align-items-center me-2">
                         <span id="nombre-usuario" class="text-white fw-bold"></span>
                     </li>
-                <!-- Icono + menú -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
-                        <img src="imagenes/perfil.png" class="icono-usuario">
-                    </a>
+                    <!-- Icono + menú -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#"
+                            data-bs-toggle="dropdown">
+                            <img src="imagenes/perfil.png" class="icono-usuario">
+                        </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="perfil.html">Mi Perfil</a></li>
                             <li><a class="dropdown-item" href="#" onclick="cerrarSesion()">Cerrar sesión</a></li>
@@ -90,7 +93,8 @@
                     <img src="imagenes/MEETING/meet_10.jpg" class="card-img-top" alt="">
                     <div class="card-body">
                         <h4 class="card-title">Bodas y Celebraciones</h4>
-                        <p>Un entorno elegante y romántico para el día más especial. Decoración personalizada y menú gourmet.</p>
+                        <p>Un entorno elegante y romántico para el día más especial. Decoración personalizada y menú
+                            gourmet.</p>
                     </div>
                 </div>
             </div>
@@ -100,7 +104,8 @@
                     <img src="imagenes/MEETING/meet_6.webp" class="card-img-top" alt="">
                     <div class="card-body">
                         <h4 class="card-title">Eventos Corporativos</h4>
-                        <p>Salas equipadas con tecnología audiovisual, coffee breaks y servicio profesional para empresas.</p>
+                        <p>Salas equipadas con tecnología audiovisual, coffee breaks y servicio profesional para
+                            empresas.</p>
                     </div>
                 </div>
             </div>
@@ -110,7 +115,8 @@
                     <img src="imagenes/MEETING/meet_11.jpg" class="card-img-top" alt="">
                     <div class="card-body">
                         <h4 class="card-title">Fiestas Privadas</h4>
-                        <p>Cumpleaños, aniversarios o reuniones familiares con un ambiente exclusivo y atención personalizada.</p>
+                        <p>Cumpleaños, aniversarios o reuniones familiares con un ambiente exclusivo y atención
+                            personalizada.</p>
                     </div>
                 </div>
             </div>
@@ -133,7 +139,7 @@
                 <img src="imagenes/MEETING/meet_8.jpg" alt="">
                 <img src="imagenes/MEETING/meet_9.jpg" alt="">
                 <img src="imagenes/MEETING/meet_12.avif" alt="">
-                
+
                 <!-- Se duplican para efecto infinito -->
                 <img src="imagenes/MEETING/meet_1.jpg" alt="">
                 <img src="imagenes/MEETING/meet_2.webp" alt="">
@@ -153,86 +159,84 @@
     <div id="event" class="container mt-5 mb-5">
         <h2 class="text-center mb-4">Servicios Disponibles</h2>
         <!-- ========================= -->
-<!-- BLOQUE EVENTOS -->
-<!-- ========================= -->
-<div class="card shadow p-4 mb-4">
-    <h4 class="mb-3">Reserva tu Evento</h4>
+        <!-- BLOQUE EVENTOS -->
+        <!-- ========================= -->
+        <div class="card shadow p-4 mb-4">
+            <h4 class="mb-3">Reserva tu Evento</h4>
 
-    <!-- FILA 1 -->
-    <div class="row align-items-end mb-3">
+            <!-- FILA 1 -->
+            <div class="row align-items-end mb-3">
 
-        <!-- TIPO DE EVENTO -->
-        <div class="col-md-3">
-            <label>Tipo de evento</label>
-            <select class="form-control" id="tipoEvento">
-                <option value="Selecciona">Selecciona</option>
-                <option value="1">Boda</option>
-                <option value="2">Comunión</option>
-                <option value="3">Grupo de empresa</option>
-                <option value="4">Fiesta privada</option>
-            </select>
-        </div>
+                <!-- TIPO DE EVENTO -->
+                <div class="col-md-3">
+                    <label>Tipo de evento</label>
+                    <select class="form-control" id="tipoEvento">
+                        <option value="Selecciona">Selecciona</option>
 
-        <!-- FECHA -->
-        <div class="col-md-3">
-            <label>Fecha</label>
-            <input type="date" class="form-control" id="fechaEvento">
-        </div>
+                    </select>
+                </div>
 
-        <!-- SALA -->
-        <div class="col-md-3">
-            <label>Sala</label>
-            <select class="form-control" id="salaEvento">
-                <option value="Selecciona">Selecciona</option>
-                <option value="Grande">Grande</option>
-                <option value="Mediana">Mediana</option>
-            </select>
-        </div>
+                <!-- FECHA -->
+                <div class="col-md-3">
+                    <label>Fecha</label>
+                    <input type="text" class="form-control" id="fechaEvento" placeholder="Selecciona fecha">
+                </div>
 
-        <!-- CATERING -->
-        <div class="col-md-3">
-            <label>Catering</label>
-            <select class="form-control" id="cateringEvento">
-                <option value="Selecciona">Selecciona</option>
-                <option value="Clásico">Clásico</option>
-                <option value="Gourmet">Gourmet</option>
-            </select>
-        </div>
+                <!-- SALA -->
+                <div class="col-md-3">
+                    <label>Sala</label>
+                    <select class="form-control" id="salaEvento">
+                        <option value="Selecciona">Selecciona</option>
+                        <option value="Grande">Grande</option>
+                        <option value="Mediana">Mediana</option>
+                    </select>
+                </div>
 
-    </div>
+                <!-- CATERING -->
+                <div class="col-md-3">
+                    <label>Catering</label>
+                    <select class="form-control" id="cateringEvento">
+                        <option value="Selecciona">Selecciona</option>
+                        <option value="Clásico">Clásico</option>
+                        <option value="Gourmet">Gourmet</option>
+                    </select>
+                </div>
 
-    <!-- FILA 2 -->
-    <div class="row align-items-end mb-3">
+            </div>
 
-        <!-- PARTICIPANTES -->
-        <div class="col-md-3">
-            <label>Participantes</label>
-            <div class="input-group">
-                <button class="btn btn-dark" onclick="cambiarParticipantesEvento(-1)">−</button>
-                <input type="text" class="form-control text-center" id="participantesEvento" value="Selecciona" readonly>
-                <button class="btn btn-dark" onclick="cambiarParticipantesEvento(1)">+</button>
+            <!-- FILA 2 -->
+            <div class="row align-items-end mb-3">
+
+                <!-- PARTICIPANTES -->
+                <div class="col-md-3">
+                    <label>Participantes</label>
+                    <div class="input-group">
+                        <button class="btn btn-dark" onclick="cambiarParticipantesEvento(-1)">−</button>
+                        <input type="text" class="form-control text-center" id="participantesEvento" value="Selecciona"
+                            readonly>
+                        <button class="btn btn-dark" onclick="cambiarParticipantesEvento(1)">+</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- FILA 3 -->
+            <div class="row mt-3">
+
+                <div class="col-md-3">
+                    <button class="btn btn-dark w-100 reservar-btn" id="btnEvento" disabled>
+                        Reservar
+                    </button>
+                </div>
+
+                <div class="col-md-9 d-flex align-items-center justify-content-end">
+                    <div class="total-box">
+                        Total: <span id="totalEvento">0 €</span>
+                    </div>
+                </div>
+
             </div>
         </div>
-
-    </div>
-
-    <!-- FILA 3 -->
-    <div class="row mt-3">
-
-        <div class="col-md-3">
-            <button class="btn btn-dark w-100 reservar-btn" id="btnEvento" disabled onclick="reservarEvento()">
-                Reservar
-            </button>
-        </div>
-
-        <div class="col-md-9 d-flex align-items-center justify-content-end">
-            <div class="total-box">
-                Total: <span id="totalEvento">0 €</span>
-            </div>
-        </div>
-
-    </div>
-</div>
 
 
 
@@ -254,42 +258,43 @@
 
 
     <!-- MODAL DE NORMAS PARA EVENTOS -->
-<div class="modal fade" id="modalNormasEventos" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+    <div class="modal fade" id="modalNormasEventos" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
 
-      <div class="modal-header">
-        <h5 class="modal-title">Normas para Reservar un Evento</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Normas para Reservar un Evento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
 
-      <div class="modal-body">
-        <p><strong>Horario del evento:</strong></p>
-        <p>De <strong>12:00</strong> hasta la <strong>01:30</strong> de la madrugada.</p>
+                <div class="modal-body">
+                    <p><strong>Horario del evento:</strong></p>
+                    <p>De <strong>12:00</strong> hasta la <strong>01:30</strong> de la madrugada.</p>
 
-        <p class="mt-3"><strong>Importante:</strong></p>
-        <p>Solo puede haber <strong>un evento por día</strong>. No se permiten dos reservas el mismo día.</p>
+                    <p class="mt-3"><strong>Importante:</strong></p>
+                    <p>Solo puede haber <strong>un evento por día</strong>. No se permiten dos reservas el mismo día.
+                    </p>
 
-        <p class="mt-3"><strong>Para más información:</strong></p>
-        <p>📞 Teléfono: <strong>+34 910 123 456</strong></p>
-        <p>📧 Email: <strong>contacto@hotelluxury.com</strong></p>
-      </div>
+                    <p class="mt-3"><strong>Para más información:</strong></p>
+                    <p>📞 Teléfono: <strong>+34 910 123 456</strong></p>
+                    <p>📧 Email: <strong>contacto@hotelluxury.com</strong></p>
+                </div>
 
-      <div class="modal-footer">
-        <button class="btn btn-dark" data-bs-dismiss="modal">Entendido</button>
-      </div>
+                <div class="modal-footer">
+                    <button class="btn btn-dark" data-bs-dismiss="modal">Entendido</button>
+                </div>
 
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
 
-<!-- SCRIPTS -->
-<!-- Bootstrap JS -->
-<script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
-<!-- Scripts -->
-<script src="./js/global/global.js"></script>
-<script src="./js/eventos/eventos.js"></script>
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="./js/global/global.js"></script>
+    <script src="./js/eventos/eventos.js"></script>
 
 </body>
+
 </html>

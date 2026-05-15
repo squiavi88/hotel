@@ -1,85 +1,51 @@
 package com.luxury.hotel.api;
 
-import com.luxury.hotel.dto.FechasOcupadas;
 import com.luxury.hotel.dto.ReservaMesaDTO;
 import com.luxury.hotel.dto.ReservaMesaOcupadaDTO;
-import com.luxury.hotel.model.*;
-import com.luxury.hotel.repositories.MesaRepository;
-import com.luxury.hotel.repositories.ReservaRepository;
+import com.luxury.hotel.model.ReservaMesa;
 import com.luxury.hotel.servicies.ReservaMesaService;
-import com.luxury.hotel.servicies.ReservaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/hotel")
 public class ReservaMesaController {
 
+    // El controlador AHORA solo depende del Service
     private final ReservaMesaService reservaMesaService;
-    private final ReservaRepository reservaRepository;
-    private final MesaRepository mesaRepository;
-    private final ReservaService reservaService;
 
-    public ReservaMesaController(ReservaMesaService reservaMesaService, ReservaRepository reservaRepository, MesaRepository mesaRepository, ReservaService reservaService) {
+    public ReservaMesaController(ReservaMesaService reservaMesaService) {
         this.reservaMesaService = reservaMesaService;
-        this.reservaRepository = reservaRepository;
-        this.mesaRepository = mesaRepository;
-        this.reservaService = reservaService;
     }
 
     @GetMapping("/reservas-mesas")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
-    public List<ReservaMesa> getAllReservaMesaas() { return reservaMesaService.findAll(); }
-
-    @GetMapping("/reservas-mesas/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
-    public ResponseEntity<ReservaMesa> getReservaMesaById(@PathVariable Long id) { return ResponseEntity.ok(reservaMesaService.findById(id)); }
+    public List<ReservaMesa> getAllReservaMesaas() {
+        return reservaMesaService.findAll();
+    }
 
     @PostMapping("/reservas-mesas")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     public ResponseEntity<?> createReservaMesa(@RequestBody ReservaMesaDTO dto) {
         try {
-            Reserva reserva = reservaRepository.findById(dto.getReservaID())
-                    .orElseThrow();
-
-            Mesa mesa = mesaRepository.findById(dto.getMesaId().longValue())
-                    .orElseThrow();
-
-            // --- LÓGICA DE CÁLCULO ---
-            // Usamos la cantidad de personas del DTO y el precio de la mesa
-            BigDecimal precioTotal = mesa.getPrecioBase().multiply(new BigDecimal(dto.getCantidadPersonas()));
-
-            ReservaMesa reservaMesa = new ReservaMesa();
-            reservaMesa.setReserva(reserva);
-            reservaMesa.setMesa(mesa);
-            reservaMesa.setFecha(dto.getFecha());
-            reservaMesa.setHora(dto.getHora());
-            reservaMesa.setTurno(dto.getTurno());                       // NUEVO: Pasa el turno del DTO al Modelo
-            reservaMesa.setCantidadPersonas(dto.getCantidadPersonas()); // NUEVO: Pasa las personas del DTO al Modelo
-            reservaMesa.setMontoPago(precioTotal);                      // Usamos el total calculado automáticamente
-            reservaMesaService.save(reservaMesa);
-
-            reserva.setPagoFinal(reserva.getPagoFinal().add(precioTotal));
-            reservaService.update(reserva.getId(), reserva);
-
-            return ResponseEntity.ok(reservaMesa);
+            // El controlador solo recibe el DTO y se lo pasa al Service
+            // Toda la lógica de cálculo y actualización de pago se hace allá
+            ReservaMesa resultado = reservaMesaService.guardarReservaCompleta(dto);
+            return ResponseEntity.ok(resultado);
         } catch (Exception e) {
-            return ResponseEntity
-                    .status(500)
-                    .body("Error: " + e.getMessage());
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
 
-    @PutMapping("/reservas-mesas/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<ReservaMesa> updateReservaMesa(@PathVariable Long id, @RequestBody ReservaMesa reservaMesa) {
-        return ResponseEntity.ok(reservaMesaService.update(id, reservaMesa));
+    @GetMapping("/reservas-mesas/ocupadas/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    public ResponseEntity<List<ReservaMesaOcupadaDTO>> getOcupacionMesa(@PathVariable Long id) {
+        // Ya no hay bucles "for" aquí. El Service devuelve la lista ya filtrada
+        List<ReservaMesaOcupadaDTO> ocupadas = reservaMesaService.buscarOcupacionPorMesa(id);
+        return ResponseEntity.ok(ocupadas);
     }
 
     @DeleteMapping("/reservas-mesas/ocupadas/{id}")
@@ -88,37 +54,4 @@ public class ReservaMesaController {
         reservaMesaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
-
-    @GetMapping("/reservas-mesas/ocupadas/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
-    public ResponseEntity<List<ReservaMesaOcupadaDTO>> getOcupacionMesa(@PathVariable Long id) {
-
-        // 1. CONSULTA TOTAL: Obtenemos todas las reservas de la base de datos.
-        // Se usa findAll() para mantener la misma lógica que tienes en ReservaHabitacionesController.
-        List<ReservaMesa> todasLasReservas = reservaMesaService.findAll();
-
-        // 2. PREPARACIÓN: Creamos una lista vacía para guardar solo las que nos interesan.
-        List<ReservaMesaOcupadaDTO> listaOcupadas = new ArrayList<>();
-
-        // 3. FILTRADO (EL BUCLE): Recorremos todas las reservas una por una.
-        for (ReservaMesa rm : todasLasReservas) {
-
-            // 4. CONDICIÓN: ¿El ID de la mesa de esta reserva coincide con el ID que recibimos por la URL?
-            if (rm.getMesa().getId().equals(id)) {
-
-                // 5. MAPEO: Si coincide, creamos un DTO con la "llave" de ocupación (ID, Fecha, Turno y Hora).
-                // Esto es lo que el Frontend usará para deshabilitar las opciones en el formulario.
-                listaOcupadas.add(new ReservaMesaOcupadaDTO(
-                        rm.getMesa().getId(),
-                        rm.getTurno(),
-                        rm.getHora(),
-                        rm.getFecha()
-                ));
-            }
-        }
-
-        // 6. RESPUESTA: Enviamos la lista filtrada al Frontend con un estado 200 OK.
-        return ResponseEntity.ok(listaOcupadas);
-    }
-    }
+}

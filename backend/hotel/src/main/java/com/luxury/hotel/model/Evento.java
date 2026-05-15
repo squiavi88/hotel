@@ -20,13 +20,19 @@ public class Evento {
     @Column(name = "Precio_Base", nullable = false)
     private BigDecimal precioBase;
 
+    @Column(name = "capacidad_maxima", nullable = false)
+    private Long capacidad;
+
+
     public Evento() {
     }
 
-    public Evento(Long id, String nombre, BigDecimal precioBase) {
+    public Evento(Long id, String nombre, BigDecimal precioBase, Long capacidad) {
         this.id = id;
         this.nombre = nombre;
         this.precioBase = precioBase;
+        this.capacidad = capacidad;
+
     }
 
     public Long getId() {
@@ -52,4 +58,13 @@ public class Evento {
     public void setPrecioBase(BigDecimal precioBase) {
         this.precioBase = precioBase;
     }
+
+    public Long getCapacidad() {
+        return capacidad;
+    }
+
+    public void setCapacidad(Long capacidad) {
+        this.capacidad = capacidad;
+    }
 }
+

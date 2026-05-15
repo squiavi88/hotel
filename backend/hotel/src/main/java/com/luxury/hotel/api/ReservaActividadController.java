@@ -1,6 +1,7 @@
 package com.luxury.hotel.api;
 
 
+import com.luxury.hotel.dto.DisponibilidadActividadDTO;
 import com.luxury.hotel.dto.ReservaActividadDTO;
 import com.luxury.hotel.dto.ReservaHabitacionDTO;
 import com.luxury.hotel.model.*;
@@ -30,7 +31,7 @@ public class ReservaActividadController {
         this.actividadService = actividadService;
     }
 
-    @GetMapping("/<reservas-actividades>")
+    @GetMapping("/reservas-actividades")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     public List<ReservaActividad> getAllReservaActividades() { return reservaActividadService.findAll(); }
 
@@ -88,5 +89,27 @@ public class ReservaActividadController {
     public ResponseEntity<Void> deleteReservaActividad(@PathVariable Long id) {
         reservaActividadService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/disponibilidad")
+    public ResponseEntity<DisponibilidadActividadDTO> obtenerDisponibilidad(
+            @PathVariable Long id,
+            @RequestParam String fecha,
+            @RequestParam String turno) {
+
+        // 1. Recepción de datos: El Front envía la fecha como String (formato YYYY-MM-DD).
+        // Es necesario parsearlo a LocalDate para que JPA pueda realizar comparaciones
+        // temporales correctas en la base de datos.
+        java.time.LocalDate fechaParseada = java.time.LocalDate.parse(fecha);
+
+        // 2. Consulta de lógica de negocio: Invocamos al Service.
+        // Este método debe contar cuántas personas ya han reservado para ese 'id', 'fecha' y 'turno'
+        // y restarlo de la capacidad total de la actividad.
+        DisponibilidadActividadDTO disponibilidad = reservaActividadService.consultarDisponibilidad(id, fechaParseada, turno);
+
+        // 3. Respuesta al Frontend: Enviamos el DTO que contiene 'cuposDisponibles'.
+        // Esto es lo que permite que el JS en el navegador bloquee o permita
+        // subir el contador de participantes según el límite real.
+        return ResponseEntity.ok(disponibilidad);
     }
 }

@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="./css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="./css/estilos.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body>
@@ -123,7 +124,7 @@
                         <!-- FECHA -->
                         <div class="col-md-3">
                             <label>Fecha</label>
-                            <input type="date" class="form-control" id="fechaActividad">
+                            <input type="text" class="form-control" id="fechaActividad" placeholder="Selecciona fecha">
                         </div>
 
                         <!-- ACTIVIDAD -->
@@ -139,7 +140,7 @@
                         <div class="col-md-3">
                             <label>Turno</label>
                             <select class="form-control" id="turnoActividad">
-                                <option value="Selecciona">Selecciona</option>
+                                <option value="Selecciona">Selecciona Turno</option>
                                 <option value="mañana">Mañana</option>
                                 <option value="tarde">Tarde</option>
                             </select>
@@ -151,7 +152,7 @@
                             <div class="input-group">
                                 <button class="btn btn-dark" onclick="cambiarParticipantes(-1)">−</button>
                                 <input type="text" class="form-control text-center" id="participantesActividad"
-                                    value="0">
+                                    value="Selecciona">
                                 <button class="btn btn-dark" onclick="cambiarParticipantes(1)">+</button>
                             </div>
                         </div>
@@ -162,7 +163,7 @@
                     <div class="row mt-3">
 
                         <div class="col-md-3">
-                            <button class="btn btn-dark w-100 reservar-btn" id="btnActividad" >
+                            <button class="btn btn-dark w-100 reservar-btn" id="btnActividad" disabled style="opacity: 0.5;">
                                 Reservar
                             </button>
                         </div>
@@ -182,7 +183,7 @@
 
     <!-- BOTÓN DE INFORMACIÓN -->
     <div class="container text-center mb-5">
-        <button  class="btn btn-dark btn-lg">
+        <button class="btn btn-dark btn-lg">
             Información Adicional
         </button>
     </div>
@@ -217,6 +218,7 @@
     </div>
 
     <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="./js/global/global.js"></script>
     <script src="./js/actividades/actividades.js"></script>
