@@ -67,10 +67,35 @@ function mostrarNombreUsuario() {
 // CARGAR USUARIO (DEBUG O FUTURO USO)
 // ===============================
 function cargarUsuario() {
-    const rol = localStorage.getItem("role");
-    const userId = localStorage.getItem("userId");
+    const idRol = parseInt(localStorage.getItem("idRol"));
+    const userId = localStorage.getItem("id");
 
-    console.log("Usuario logueado:", userId, "Rol:", rol);
+    console.log("Usuario logueado:", userId, "Rol:", idRol);
+
+    // Antes del switch, capturamos a todos los que tengan la clase 'solo-admin'
+    const elementosAdmin = document.querySelectorAll(".admin");
+
+    switch (idRol) { // Usa idRol (el número 1 o 2), no el userId
+        case 1: // CASO ADMIN
+            elementosAdmin.forEach(elemento => {
+                elemento.classList.remove("d-none"); // Le quitamos el "invisible"
+                elemento.classList.add("d-inline-block"); // Le ponemos el "visible"
+            });
+            console.log("Admin detectado: Botones mostrados");
+            break;
+
+        case 2: // CASO CLIENTE
+            elementosAdmin.forEach(elemento => {
+                elemento.classList.add("d-none"); // Por si acaso, nos aseguramos que estén ocultos
+                // O mejor aún: el.remove(); (para que no existan en el HTML)
+            });
+            break;
+
+        default:
+            // Si no hay sesión, los borramos todos
+            elementosAdmin.forEach(elemento => elemento.remove());
+            break;
+    }
 }
 
 // ===============================
@@ -80,5 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
     //comprobarSesion();        //***IMPORTANTE DESCOMENTAR ****/
     mostrarNombreUsuario();
     cargarUsuario();
+
 });
 

@@ -42,7 +42,7 @@ public class LoginController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Usuario usuario) {
-        usuario.setRol(rolService.findById(1L));
+        usuario.setRol(rolService.findById(2L));
         usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
         usuarioRepository.save(usuario);
         return ResponseEntity.ok("Usuario registrado correctamente");

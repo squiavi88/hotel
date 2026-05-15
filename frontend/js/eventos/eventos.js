@@ -13,7 +13,7 @@ const calendarioEvento = flatpickr("#fechaEvento", {
     disableMobile: true,
     // BLOQUEO DE FECHAS SEGÚN SALA
     disable: [
-        function(date) {
+        function (date) {
             const sala = document.getElementById("salaEvento").value;
             if (!sala || sala === "Selecciona") return false;
 
@@ -98,7 +98,7 @@ function cambiarParticipantesEvento(valorRecibido) {
     // Solo actualizamos el input si el número está entre 1 y el límite permitido
     if (nuevaCantidad >= 1 && nuevaCantidad <= limiteReal) {
         inputPars.value = nuevaCantidad;
-         actualizarPrecio();
+        actualizarPrecio();
     }
 }
 
@@ -110,9 +110,14 @@ function cambiarParticipantesEvento(valorRecibido) {
 
 async function cargarFechasOcupadas() {
     try {
-        const res = await fetch("http://localhost:8080/hotel/eventos/ocupados");
+        const res = await fetch("http://localhost:8080/hotel/eventos/ocupados", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include"
+
+        });
         reservasOcupadas = await res.json();
-        calendarioEvento.redraw(); 
+        calendarioEvento.redraw();
     } catch (error) {
         console.error("Error cargando fechas ocupadas:", error);
     }
@@ -198,7 +203,7 @@ function validarReservaEvento() {
     const fecha = document.getElementById("fechaEvento").value;
     const tipo = document.getElementById("tipoEvento").value;
     const sala = document.getElementById("salaEvento").value;
-        const catering = document.getElementById("cateringEvento").value;
+    const catering = document.getElementById("cateringEvento").value;
 
     const boton = document.getElementById("btnEvento");
 

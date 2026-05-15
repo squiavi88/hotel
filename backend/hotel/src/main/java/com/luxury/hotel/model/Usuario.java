@@ -32,7 +32,10 @@ public class Usuario {
     private String apellidos;
 
 
-    @ManyToOne
+    /*@ManyToOne
+    @JoinColumn(name = "Id_Rol")
+    private Rol rol;*/
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Id_Rol")
     private Rol rol;
 

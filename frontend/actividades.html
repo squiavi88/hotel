@@ -163,13 +163,22 @@
                     <div class="row mt-3">
 
                         <div class="col-md-3">
-                            <button class="btn btn-dark w-100 reservar-btn" id="btnActividad" disabled style="opacity: 0.5;">
+                            <button class="btn btn-dark w-100 reservar-btn" id="btnActividad" disabled
+                                style="opacity: 0.5;">
                                 Reservar
                             </button>
                         </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-primary w-100 d-none admin modificar-datos text-white px-4"
+                                data-bs-toggle="modal" data-bs-target="#modalGestionActividad">
+                                Modificar
+                            </button>
+                        </div>
 
-                        <div class="col-md-9 d-flex align-items-center justify-content-end">
-                            <div class="total-box">
+
+
+                        <div class="col-md-6">
+                            <div class="total-box-mini text-center">
                                 Total: <span id="totalActividad">0 €</span>
                             </div>
                         </div>
@@ -216,12 +225,52 @@
             </div>
         </div>
     </div>
+    <!-- MODAL de modificacion de los campos de actividades -->
+
+    <div class="modal fade" id="modalGestionActividad" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-white shadow-lg border-0">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="tituloModalActividad">Gestionar Actividad</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formActividad">
+                        <input type="hidden" id="actividadId">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nombre de la Actividad</label>
+                            <input type="text" id="actividadNombre" class="form-control"
+                                placeholder="Ej: Tirolina, Masaje...">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Precio (€)</label>
+                            <input type="number" id="actividadPrecio" class="form-control" step="0.01">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Capacidad Máxima</label>
+                            <input type="number" id="actividadCapacidad" class="form-control">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary px-4" onclick="guardarActividad()">Guardar
+                        Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="./js/global/global.js"></script>
     <script src="./js/actividades/actividades.js"></script>
+        <script src="./js/actividades/modificarActividades.js></script>
+
 
 </body>
 

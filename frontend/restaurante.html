@@ -152,7 +152,8 @@
                             <label>Mesa</label>
                             <div class="input-group">
                                 <button class="btn btn-dark" onclick="cambiarMesa(-1)">−</button>
-                                <input type="text" class="form-control text-center" value ="Selecciona" id="mesaRestaurante" readonly>
+                                <input type="text" class="form-control text-center" value="Selecciona"
+                                    id="mesaRestaurante" readonly>
                                 <button class="btn btn-dark" onclick="cambiarMesa(1)">+</button>
                             </div>
                         </div>
@@ -171,21 +172,25 @@
                     </div>
 
                     <!-- FILA 3 -->
-                    <div class="row mt-3">
+                    <div class="row mt-3 align-items-center">
+                        <div class="col-md-8 d-flex gap-2">
 
-                        <div class="col-md-4">
-
-                            <button id="btnRestaurante" class="btn btn-dark w-100" disabled style="opacity: 0.5;">
+                            <button id="btnRestaurante" class="btn btn-dark px-4" disabled style="opacity: 0.5;">
                                 Reservar
                             </button>
+
+                            <button class="btn btn-primary d-none admin modificar-datos text-white px-4"
+                                data-bs-toggle="modal" data-bs-target="#modalGestionMesa">
+                                Modificar
+                            </button>
+
                         </div>
 
-                        <div class="col-md-8 d-flex align-items-center justify-content-end">
-                            <div class="total-box">
+                        <div class="col-md-4 text-center">
+                            <div class="total-box fw-bold fs-5">
                                 Total: <span id="totalRestaurante">0 €</span>
                             </div>
                         </div>
-
                     </div>
 
                 </div>
@@ -240,12 +245,55 @@
             </div>
         </div>
     </div>
+    <!-- Modal que modifica los campos de mesas -->
+
+    <div class="modal fade" id="modalGestionMesa" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-white shadow-lg border-0">
+
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold text-dark" id="tituloModalMesa">Gestionar Mesa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form id="formMesa">
+                        <input type="hidden" id="mesaId">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-secondary">Número de Mesa</label>
+                            <input type="number" id="mesaNumero" class="form-control" placeholder="Ej: 1">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-secondary">Capacidad (Personas)</label>
+                            <input type="number" id="mesaCapacidad" class="form-control" placeholder="Ej: 4">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-secondary">Precio Base Reserva (€)</label>
+                            <input type="number" id="mesaPrecio" class="form-control" step="0.01" placeholder="20.00">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary px-4 fw-bold" onclick="guardarMesa()">Guardar
+                        Cambios</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="./js/global/global.js"></script>
     <script src="./js/restaurante/mesas.js"></script>
+    <script src="./js/restaurante/modificarMesas.js"></script>
+
 
 </body>
 

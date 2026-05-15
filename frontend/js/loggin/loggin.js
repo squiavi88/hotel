@@ -98,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("email", user.email);
             localStorage.setItem("apellidos", user.apellidos);
             localStorage.setItem("fechaNacimiento", user.fechaNacimiento);
+            localStorage.setItem("idRol", user.rol.id)
 
 
             // Redirect after login

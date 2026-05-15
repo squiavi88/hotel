@@ -23,7 +23,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/hotel/login", "/hotel/register", "/hotel/recuperar-cuenta", "/hotel/eventos/ocupados").permitAll()
+                        .requestMatchers("/hotel/login", "/hotel/register", "/hotel/recuperar-cuenta").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable())

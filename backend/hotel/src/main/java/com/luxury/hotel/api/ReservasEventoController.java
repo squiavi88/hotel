@@ -36,6 +36,7 @@ public class ReservasEventoController {
 
     // EL NUEVO ENDPOINT PARA EL JS
     @GetMapping("/eventos/ocupados")
+    @PreAuthorize("isAuthenticated()")
     public List<ReservaEventoOcupadoDTO> obtenerOcupados() {
         return reservaEventoRepository.findTodasLasOcupadas();
     }
