@@ -110,6 +110,7 @@
         </div>
     </div>
 
+
     <!-- BLOQUE ÚNICO DE ACTIVIDADES -->
     <div id="actividades" class="container mt-5">
         <div class="card shadow p-4 mb-4">
@@ -147,8 +148,8 @@
                         </div>
 
                         <!-- PARTICIPANTES -->
-                        <div class="col-md-3">
-                            <label>Participantes</label>
+                        <div class="col-md-3 position-relative">
+                            <div id="mensajeAlertaActividad"></div> <label>Participantes</label>
                             <div class="input-group">
                                 <button class="btn btn-dark" onclick="cambiarParticipantes(-1)">−</button>
                                 <input type="text" class="form-control text-center" id="participantesActividad"
@@ -160,27 +161,26 @@
                     </div>
 
                     <!-- FILA 2: BOTÓN + TOTAL -->
-                    <div class="row mt-3">
+                    <div class="d-flex align-items-center justify-content-between gap-3 mt-3">
 
-                        <div class="col-md-3">
-                            <button class="btn btn-dark w-100 reservar-btn" id="btnActividad" disabled
-                                style="opacity: 0.5;">
+                        <div class="d-flex gap-2">
+                            <button id="btnActividad" class="btn btn-dark fw-bold py-0" disabled
+                                style="height: 35px; width: 150px; opacity: 0.5; font-size: 0.85rem;">
                                 Reservar
                             </button>
-                        </div>
-                        <div class="col-md-3">
-                            <button class="btn btn-primary w-100 d-none admin modificar-datos text-white px-4"
-                                data-bs-toggle="modal" data-bs-target="#modalGestionActividad">
-                                Modificar
+
+                            <button class="btn btn-primary admin d-none modificar-datos text-white py-0 px-2"
+                                data-bs-toggle="modal" data-bs-target="#modalGestionActividad"
+                                style="height: 35px; width: 200px; font-size: 0.85rem;">
+                                Gestionar Actividades
                             </button>
                         </div>
 
-
-
-                        <div class="col-md-6">
-                            <div class="total-box-mini text-center">
+                        <div class="d-flex align-items-center justify-content-center border rounded shadow-sm"
+                            style="height: 35px; min-width: 150px; background-color: #fcfcfc;">
+                            <span class="fw-bold text-dark mb-0" style="font-size: 0.9rem;">
                                 Total: <span id="totalActividad">0 €</span>
-                            </div>
+                            </span>
                         </div>
 
                     </div>
@@ -192,7 +192,7 @@
 
     <!-- BOTÓN DE INFORMACIÓN -->
     <div class="container text-center mb-5">
-        <button class="btn btn-dark btn-lg">
+        <button type="button" class="btn btn-dark btn-lg" data-bs-toggle="modal" data-bs-target="#modalNormas">
             Información Adicional
         </button>
     </div>
@@ -203,23 +203,25 @@
     </footer>
 
     <!-- MODAL DE NORMAS -->
-    <div class="modal fade" id="modalNormas" tabindex="-1">
+    <div class="modal fade" id="modalNormas" tabindex="-1" aria-labelledby="tituloNormas" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content shadow-lg">
 
-                <div class="modal-header">
-                    <h5 class="modal-title">Normas de Actividades</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="tituloNormas">Normas de Actividades</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <p><strong>No se pueden realizar dos eventos en un mismo turno del mismo día.</strong></p>
+                    <hr>
                     <p>Horario de mañana: <strong>9:30 a 14:00</strong></p>
                     <p>Horario de tarde: <strong>16:30 a 20:30</strong></p>
                 </div>
 
-                <div class="modal-footer">
-                    <button class="btn btn-dark" data-bs-dismiss="modal">Entendido</button>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-dark px-4" data-bs-dismiss="modal">Entendido</button>
                 </div>
 
             </div>
@@ -269,7 +271,7 @@
     <script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="./js/global/global.js"></script>
     <script src="./js/actividades/actividades.js"></script>
-        <script src="./js/actividades/modificarActividades.js></script>
+    <script src="./js/actividades/modificarActividades.js></script>
 
 
 </body>

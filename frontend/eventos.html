@@ -221,26 +221,27 @@
             </div>
 
             <!-- FILA 3 -->
-            <div class="row mt-3">
+            <div class="d-flex align-items-center justify-content-between gap-3 mt-4">
 
-                <div class="col-md-3">
-                    <button class="btn btn-dark w-100 reservar-btn" id="btnEvento" disabled>
+                <div class="d-flex gap-2">
+                    <button id="btnEvento" class="btn btn-dark fw-bold py-0" disabled
+                        style="height: 35px; width: 150px; opacity: 0.5; font-size: 0.85rem;">
                         Reservar
                     </button>
-                </div>
 
-                <div class="col-md-3">
-                    <button class="btn btn-primary w-100 d-none admin modificar-datos text-white px-4"
-                        data-bs-toggle="modal" data-bs-target="#modalGestionEvento">
-                        Modificar
+                    <button class="btn btn-primary admin d-none modificar-datos text-white py-0 px-2"
+                        data-bs-toggle="modal" data-bs-target="#modalGestionEvento"
+                        style="height: 35px; width: 180px; font-size: 0.85rem;">
+                        Gestionar Eventos
                     </button>
                 </div>
-                <div class="col-md-9 d-flex align-items-center justify-content-end">
-                    <div class="total-box">
-                        Total: <span id="totalEvento">0 €</span>
-                    </div>
-                </div>
 
+                <div class="d-flex align-items-center justify-content-center border rounded shadow-sm"
+                    style="height: 35px; min-width: 150px; background-color: #fcfcfc;">
+                    <span class="fw-bold text-dark mb-0" style="font-size: 0.9rem;">
+                        Total: <span id="totalEvento">0 €</span>
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -252,7 +253,8 @@
 
     <!-- BOTÓN DE RESERVA -->
     <div class="container text-center mb-5">
-        <button onclick="accederReservaEvento()" class="btn btn-dark btn-lg">
+        <button type="button" class="btn btn-dark btn-lg px-5" data-bs-toggle="modal"
+            data-bs-target="#modalNormasEventos">
             Información Adicional
         </button>
     </div>

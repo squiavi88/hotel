@@ -73,15 +73,18 @@ cargarActividades();
 function cambiarParticipantes(valorRecibido) {
     const inputPars = document.getElementById("participantesActividad");
     const select = document.getElementById("actividadSeleccionada");
+
+    // CAMBIO AQUÍ: Debe ser mostrarAvisoActividad
+    if (select.value === "" || select.value === "Selecciona") {
+        mostrarAvisoActividad("Selecciona una actividad para poder ajustar los participantes.");
+        return;
+    }
+
     const opcionElegida = select.options[select.selectedIndex];
-
-    // Extraemos el límite actual (puede ser la capacidad total o los cupos reales del servidor)
-    const limiteReal = parseInt(opcionElegida.dataset.capacidad);
-
-    // Calculamos la nueva cantidad sumando el paso (1 o -1)
+    // Agregamos un || 0 por seguridad si el dataset está vacío
+    const limiteReal = parseInt(opcionElegida.dataset.capacidad) || 0;
     let nuevaCantidad = (parseInt(inputPars.value) || 0) + valorRecibido;
 
-    // Solo actualizamos el input si el número está entre 1 y el límite permitido
     if (nuevaCantidad >= 1 && nuevaCantidad <= limiteReal) {
         inputPars.value = nuevaCantidad;
         actualizarPrecio();
@@ -221,7 +224,7 @@ function validarReservaActividades() {
         // Si falta algo, lo bloqueamos
         boton.disabled = true;
         boton.style.opacity = "0.5"; // Se ve traslúcido
-       // boton.style.cursor = "not-allowed";
+        // boton.style.cursor = "not-allowed";
     }
 }
 // Escuchadores para activar/desactivar el botón en tiempo real
@@ -238,6 +241,9 @@ validarReservaActividades();
  */
 
 function actualizarPrecio() {
+    // Limpia el contenedor de alertas cuando hay una acción válida
+    const contenedorAlerta = document.getElementById('mensajeAlertaActividad');
+    if (contenedorAlerta) contenedorAlerta.innerHTML = "";
     const select = document.getElementById("actividadSeleccionada");
     const inputPars = document.getElementById("participantesActividad");
     const displayTotal = document.getElementById("totalActividad");
@@ -311,3 +317,26 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
+/**
+ * ============================================================
+ * FUNCIÓN PARA MOSTRAR AVISOS DE BOOTSTRAP
+ * ============================================================
+ */
+function mostrarAvisoActividad(mensaje, tipo = "warning") {
+    const contenedor = document.getElementById('mensajeAlertaActividad');
+    contenedor.innerHTML = `
+        <div class="alert alert-${tipo} alert-dismissible fade show small py-2 mb-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> ${mensaje}
+            <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+    // Autocerrado tras 4 segundos para no ensuciar la vista
+    setTimeout(() => {
+        const alerta = document.querySelector('#mensajeAlertaActividad .alert');
+        if (alerta) {
+            const bsAlert = new bootstrap.Alert(alerta);
+            bsAlert.close();
+        }
+    }, 4000);
+}

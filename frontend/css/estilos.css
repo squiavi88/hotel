@@ -380,3 +380,17 @@ html {
     filter: brightness(1.05);
 }
 
+/* Contenedor de notificaciones flotantes */
+#mensajeAlertaActividad {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1050; /* Por encima de todo */
+    max-width: 300px; /* Para que no ocupe todo el ancho */
+}
+
+.alerta-compacta {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border: none;
+    border-left: 5px solid #ffc107; /* Color amarillo de advertencia */
+}
