@@ -1,20 +1,22 @@
 package com.luxury.hotel.api;
 
 
-import com.luxury.hotel.dto.DisponibilidadActividadDTO;
+import com.luxury.hotel.dto.HorasOcupadas;
 import com.luxury.hotel.dto.ReservaActividadDTO;
-import com.luxury.hotel.dto.ReservaHabitacionDTO;
 import com.luxury.hotel.model.*;
-import com.luxury.hotel.repositories.ReservaRepository;
+import com.luxury.hotel.repositories.ReservaActividadRepository;
 import com.luxury.hotel.servicies.ActividadService;
 import com.luxury.hotel.servicies.ReservaActividadService;
 import com.luxury.hotel.servicies.ReservaService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,11 +26,13 @@ public class ReservaActividadController {
     private final ReservaActividadService reservaActividadService;
     private final ReservaService reservaService;
     private final ActividadService actividadService;
+    private final ReservaActividadRepository reservaActividadRepository;
 
-    public ReservaActividadController(ReservaActividadService reservaActividadService, ReservaService reservaService, ActividadService actividadService) {
+    public ReservaActividadController(ReservaActividadService reservaActividadService, ReservaService reservaService, ActividadService actividadService, ReservaActividadRepository reservaActividadRepository) {
         this.reservaActividadService = reservaActividadService;
         this.reservaService = reservaService;
         this.actividadService = actividadService;
+        this.reservaActividadRepository = reservaActividadRepository;
     }
 
     @GetMapping("/reservas-actividades")
@@ -44,13 +48,11 @@ public class ReservaActividadController {
     public ResponseEntity<?> createReservaActividad(@RequestBody ReservaActividadDTO dto) {
 
         try {
-            // 1. Buscamos las entidades relacionadas
             Reserva reserva = reservaService.findById(dto.getReservaId());
 
             Actividad actividad = actividadService.findById(dto.getActividadId());
-            // 2. LÓGICA DE CÁLCULO EN EL BACKEND
-            // Multiplicamos el precio base de la BD por los participantes del DTO
-            BigDecimal precioCalculado = actividad.getPrecioBase().multiply(BigDecimal.valueOf(dto.getParticipantes()));
+
+            BigDecimal precioTotal = actividad.getPrecioBase().multiply(BigDecimal.valueOf(dto.getParticipantes()));
 
             ReservaActividad reservaActividad = new ReservaActividad();
             reservaActividad.setReserva(reserva);
@@ -58,16 +60,11 @@ public class ReservaActividadController {
             reservaActividad.setTurno(dto.getTurno());
             reservaActividad.setFecha(dto.getFecha());
             reservaActividad.setParticipantes(dto.getParticipantes());
-            // CAMBIO CRÍTICO: Usamos 'precioCalculado' (del server) NO 'dto.getMonto()' (del front)
-            reservaActividad.setMonto(precioCalculado);
+            reservaActividad.setMonto(precioTotal);
 
             reservaActividadService.save(reservaActividad);
 
-            BigDecimal pagoActual = reserva.getPagoFinal();
-            if (pagoActual == null) {
-                pagoActual = BigDecimal.ZERO; // Si es null, lo tratamos como 0
-            }
-            reserva.setPagoFinal(reserva.getPagoFinal().add(precioCalculado));
+            reserva.setPagoFinal(reserva.getPagoFinal().add(precioTotal));
             reservaService.update(reserva.getId(), reserva);
 
             return ResponseEntity.ok(reservaActividad);
@@ -91,25 +88,12 @@ public class ReservaActividadController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}/disponibilidad")
-    public ResponseEntity<DisponibilidadActividadDTO> obtenerDisponibilidad(
-            @PathVariable Long id,
-            @RequestParam String fecha,
-            @RequestParam String turno) {
+    @GetMapping("/reservas-actividades/ocupadas/{fecha}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    public ResponseEntity<List<ReservaActividad>> getActividadesOcupadas(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
 
-        // 1. Recepción de datos: El Front envía la fecha como String (formato YYYY-MM-DD).
-        // Es necesario parsearlo a LocalDate para que JPA pueda realizar comparaciones
-        // temporales correctas en la base de datos.
-        java.time.LocalDate fechaParseada = java.time.LocalDate.parse(fecha);
+        List<ReservaActividad> ocupadasList = reservaActividadRepository.findByFecha(fecha);
 
-        // 2. Consulta de lógica de negocio: Invocamos al Service.
-        // Este método debe contar cuántas personas ya han reservado para ese 'id', 'fecha' y 'turno'
-        // y restarlo de la capacidad total de la actividad.
-        DisponibilidadActividadDTO disponibilidad = reservaActividadService.consultarDisponibilidad(id, fechaParseada, turno);
-
-        // 3. Respuesta al Frontend: Enviamos el DTO que contiene 'cuposDisponibles'.
-        // Esto es lo que permite que el JS en el navegador bloquee o permita
-        // subir el contador de participantes según el límite real.
-        return ResponseEntity.ok(disponibilidad);
+        return ResponseEntity.ok(ocupadasList);
     }
 }

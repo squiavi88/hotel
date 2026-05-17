@@ -41,12 +41,12 @@ async function cargarReservasUsuario() {
             credentials: "include"
         });
 
-        
+
         if (!response.ok) {
             throw new Error("Error al cargar reservas");
         }
 
-        
+
         const reservas = await response.json();
         console.log("RESERVAS:", reservas);
 

@@ -9,32 +9,29 @@ public class ReservaMesaDTO {
     private Long reservaId;
     private Integer mesaId;
     private LocalDate fecha;
-
-    private String turno;           // <--- Agregar
+    private String turno;
     private LocalTime hora;
-    private Integer cantidadPersonas; // <--- Agregar
-
+    private Integer numeroPersonas;
     private BigDecimal montoPago;
 
     public ReservaMesaDTO() {
     }
 
-    public ReservaMesaDTO(Long reservaID, Integer mesaId, LocalDate fecha, String turno, LocalTime hora,
-                          Integer cantidadPersonas, BigDecimal montoPago) {
-        this.reservaId = reservaID;
+    public ReservaMesaDTO(Long reservaId, Integer mesaId, LocalDate fecha, String turno, LocalTime hora, Integer numeroPersonas, BigDecimal montoPago) {
+        this.reservaId = reservaId;
         this.mesaId = mesaId;
-        this.turno = turno;
         this.fecha = fecha;
-        this.cantidadPersonas = cantidadPersonas;
+        this.turno = turno;
         this.hora = hora;
+        this.numeroPersonas = numeroPersonas;
         this.montoPago = montoPago;
     }
 
-    public Long getReservaID() {
+    public Long getReservaId() {
         return reservaId;
     }
 
-    public void setReservaID(Long reservaId) {
+    public void setReservaId(Long reservaId) {
         this.reservaId = reservaId;
     }
 
@@ -54,9 +51,13 @@ public class ReservaMesaDTO {
         this.fecha = fecha;
     }
 
-    public String getTurno() {return turno;}
+    public String getTurno() {
+        return turno;
+    }
 
-    public void setTurno(String turno) {this.turno = turno;}
+    public void setTurno(String turno) {
+        this.turno = turno;
+    }
 
     public LocalTime getHora() {
         return hora;
@@ -66,9 +67,13 @@ public class ReservaMesaDTO {
         this.hora = hora;
     }
 
-    public Integer getCantidadPersonas() {return cantidadPersonas;}
+    public Integer getCapacidadPersonas() {
+        return numeroPersonas;
+    }
 
-    public void setCantidadPersonas(Integer cantidadPersonas) {this.cantidadPersonas = cantidadPersonas;}
+    public void setCapacidadPersonas(Integer numeroPersonas) {
+        this.numeroPersonas = numeroPersonas;
+    }
 
     public BigDecimal getMontoPago() {
         return montoPago;

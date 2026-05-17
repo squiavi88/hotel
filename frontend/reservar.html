@@ -14,229 +14,179 @@
 
 <body>
 
-    <!-- BARRA SUPERIOR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="inicio.html">
-                <img src="imagenes/logo.png" alt="Logo" class="logo-hotel me-2">
-                Hotel Luxury
-            </a>
+<!-- BARRA SUPERIOR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="inicio.html">
+            <img src="imagenes/logo.png" alt="Logo" class="logo-hotel me-2">
+            Hotel Luxury
+        </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="collapse navbar-collapse" id="navbarNav">
 
-                <!-- MENÚ IZQUIERDA -->
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <!-- MENÚ IZQUIERDA -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="inicio.html">Inicio</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="inicio.html">Inicio</a>
+                </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link active" href="reservar.html">Reservar</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="reservar.html">Reservar</a>
+                </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="restaurante.html">Restaurante</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="restaurante.html">Restaurante</a>
+                </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="actividades.html">Actividades</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="actividades.html">Actividades</a>
+                </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="eventos.html">Eventos</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="eventos.html">Eventos</a>
+                </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="contacto.html">Contacto</a>
-                    </li>
-                </ul>
+                <li class="nav-item">
+                    <a class="nav-link" href="contacto.html">Contacto</a>
+                </li>
+            </ul>
 
-                <!-- MENÚ USUARIO A LA DERECHA -->
-                <ul class="navbar-nav ms-auto">
-                    <!-- Nombre del usuario -->
-                    <li class="nav-item d-flex align-items-center me-2">
-                        <span id="nombre-usuario" class="text-white fw-bold"></span>
-                    </li>
-                    <!-- Icono + menú -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#"
-                            data-bs-toggle="dropdown">
-                            <img src="imagenes/perfil.png" class="icono-usuario">
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="perfil.html">Mi Perfil</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="cerrarSesion()">Cerrar sesión</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+            <!-- MENÚ USUARIO A LA DERECHA -->
+            <ul class="navbar-nav ms-auto">
+                <!-- Nombre del usuario -->
+                <li class="nav-item d-flex align-items-center me-2">
+                    <span id="nombre-usuario" class="text-white fw-bold"></span>
+                </li>
+                <!-- Icono + menú -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#"
+                       data-bs-toggle="dropdown">
+                        <img src="imagenes/perfil.png" class="icono-usuario">
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="perfil.html">Mi Perfil</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="cerrarSesion()">Cerrar sesión</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <div class="mt-5 pt-4"></div>
+<div class="mt-5 pt-4"></div>
 
-    <div class="container mt-4">
-        <h2 class="text-center mb-4">Habitaciones Disponibles</h2>
-        <div id="msg-reserva" class="alert d-none mb-3 text-center"></div>
-
-        <div class="container mt-4 mb-4 text-end">
-            <button class="btn btn-primary admin d-none px-4" data-bs-toggle="modal"
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Habitaciones Disponibles</h2>
+    <div class="container mt-4 mb-4 text-end">
+        <button class="btn btn-primary admin d-none px-4" data-bs-toggle="modal"
                 data-bs-target="#modalGestionHabitacion">
-                Gestionar Habitaciones
-            </button>
-        </div>
-
-        <!-- AQUÍ SE RENDERIZAN LAS HABITACIONES -->
-        <div id="habitaciones-container"></div>
-    </div>
+            Gestionar Habitaciones
+        </button>
     </div>
 
+    <div id="msg-reserva" class="alert d-none mb-3 text-center"></div>
 
-    <!-- MODAL DE PAGO PREMIUM -->
-    <div class="modal fade" id="modalPago" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content modal-pago-premium">
+    <!-- AQUÍ SE RENDERIZAN LAS HABITACIONES -->
+    <div id="habitaciones-container"></div>
+</div>
 
-                <div class="modal-header border-0">
-                    <div class="d-flex align-items-center">
-                        <span class="icono-tarjeta me-2">💳</span>
-                        <h5 class="modal-title">Confirmar Pago</h5>
+
+<!-- MODAL DE PAGO PREMIUM -->
+<div id="modal-pago-container"></div>
+
+
+
+<footer class="bg-dark text-white text-center py-3">
+    <p>© 2026 Hotel Luxury — Todos los derechos reservados</p>
+</footer>
+
+<!-- MODAL para modificar los campos de habitaciones-->
+
+<div class="modal fade" id="modalGestionHabitacion" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-white shadow-lg border-0">
+
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark" id="tituloModalHabitacion">Gestionar Habitación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="formHabitacion">
+                    <input type="hidden" id="habitacionId">
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-secondary">ID</label>
+                        <select id="habIdSelect" class="form-select">
+                            <option value="">Seleccionar ID</option>
+                        </select>
                     </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-
-                    <p class="text-gold mb-3" id="resumenPago"></p>
-
-                    <label class="fw-bold text-light">Nombre del titular</label>
-                    <input type="text" id="pagoNombre" class="form-control mb-1 campo-pago">
-                    <small id="msgNombre" class="text-warning d-block mb-2"></small>
-
-                    <label class="fw-bold text-light">Número de tarjeta</label>
-                    <input type="text" id="pagoNumero" class="form-control mb-1 campo-pago" maxlength="19"
-                        placeholder="1234 5678 9012 3456">
-                    <small id="msgNumero" class="text-warning d-block mb-2"></small>
 
                     <div class="row">
-                        <div class="col-6">
-                            <label class="fw-bold text-light">Fecha de expiración</label>
-                            <input type="month" id="pagoExpiracion" class="form-control mb-1 campo-pago">
-                            <small id="msgExp" class="text-warning d-block mb-2"></small>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-secondary">Nombre de la Habitación</label>
+                            <input type="text" id="habNombre" class="form-control"
+                                   placeholder="Ej: Suite Imperial UNO">
                         </div>
-                        <div class="col-6">
-                            <label class="fw-bold text-light">Código de seguridad</label>
-                            <input type="password" id="pagoCVV" class="form-control mb-1 campo-pago" maxlength="3"
-                                placeholder="***">
-                            <small id="msgCVV" class="text-warning d-block mb-2"></small>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-secondary">Número</label>
+                            <input type="number" id="habNumero" class="form-control" placeholder="Ej: 101">
                         </div>
                     </div>
 
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary">Descripción</label>
+                        <textarea id="habDescripcion" class="form-control" rows="3"></textarea>
+                    </div>
 
-                <div class="modal-footer border-0">
-                    <button class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
-                    <button id="btnConfirmarPago" class="btn btn-gold" disabled>Confirmar Pago</button>
-                </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-secondary">Tipo</label>
+                            <select id="habTipo" class="form-select">
+                                <option value="SIMPLE">Simple</option>
+                                <option value="DOBLE">Doble</option>
+                                <option value="SUITE">Suite</option>
+                                <option value="FAMILIAR">Familiar</option>
+                                <option value="DELUXE">Deluxe</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-secondary">Precio por Noche (€)</label>
+                            <input type="number" id="habPrecio" class="form-control" step="0.01">
+                        </div>
+                    </div>
+                </form>
+            </div>
 
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="btnGuardarHabitacion" class="btn btn-primary px-4 fw-bold">Guardar
+                Cambios</button>
             </div>
         </div>
     </div>
+</div>
 
-
-
-    <footer class="bg-dark text-white text-center py-3">
-        <p>© 2026 Hotel Luxury — Todos los derechos reservados</p>
-    </footer>
-
-    <!-- MODAL para modificar los campos de habitaciones-->
-
-    <div class="modal fade" id="modalGestionHabitacion" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content bg-white shadow-lg border-0">
-
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold text-dark" id="tituloModalHabitacion">
-                        Gestionar Habitación
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    <form id="formHabitacion">
-                        <input type="hidden" id="habitacionId">
-
-                        <div class="row">
-                            <!-- NOMBRE (SELECT) -->
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold text-secondary">
-                                    Nombre de la Habitación
-                                </label>
-                                <select id="habitacionSeleccionadaModal" class="form-select">
-                                    <option value="">Seleccione una habitación</option>
-                                    
-                                </select>
-                            </div>
-
-                            <!-- NUMERO -->
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold text-secondary">Número</label>
-                                <input type="text" id="habNumero" class="form-control" placeholder="Ej: 101">
-                            </div>
-                        </div>
-
-                        <!-- DESCRIPCIÓN (SE QUEDA IGUAL) -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold text-secondary">Descripción</label>
-                            <textarea id="habDescripcion" class="form-control" rows="3"></textarea>
-                        </div>
-
-                        <div class="row">
-                            <!-- TIPO -->
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold text-secondary">Tipo</label>
-                                <input type="text" id="habTipo" class="form-control"
-                                    placeholder="Ej: Individual, Doble, Suite">
-                            </div>
-
-                            <!-- PRECIO -->
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold text-secondary">
-                                    Precio por Noche (€)
-                                </label>
-                                <input type="text" id="habPrecio" class="form-control" placeholder="Ej: 120.00">
-                            </div>
-                        </div>
-
-                    </form>
-                </div>
-
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                        Cancelar
-                    </button>
-                    <button type="button" id="btnGuardarHabitacion" class="btn btn-primary px-4 fw-bold">
-                        Guardar Cambios
-                    </button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap JS -->
-    <script src=" ./js/bootstrap/bootstrap.bundle.min.js"></script>
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="./js/global/global.js"></script>
-    <script src="./js/reservas/reservas.js"></script>
-    <script src="./js/reservas/modificarReservas.js"></script>
+<!-- Bootstrap JS -->
+<script src=" ./js/bootstrap/bootstrap.bundle.min.js"></script>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="./js/global/global.js"></script>
+<script src="./js/reservas/reservas.js"></script>
+<script src="./js/reservas/modificarReservas.js"></script>
+<script>
+    fetch("./modalPago.html")
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById("modal-pago-container").innerHTML = html;
+            inicializarModalPago();
+        });
+</script>
 
 </body>
 

@@ -5,6 +5,7 @@
  */
 
 let listaActividades = []; // Almacena las actividades traídas del servidor
+let participantesActuales = 1;
 
 // Configuración del calendario Flatpickr
 flatpickr("#fechaActividad", {
@@ -13,7 +14,7 @@ flatpickr("#fechaActividad", {
     disableMobile: true,
     // Esto asegura que la validación corra en cuanto el usuario elija una fecha
     onChange: function (selectedDates, dateStr, instance) {
-        validarReservaActividades();
+        probarDisponibilidad(dateStr);
     }
 });
 
@@ -44,7 +45,7 @@ async function cargarActividades() {
         option.textContent = actividad.nombre;
 
         // Guardamos precio y capacidad técnica en el dataset de la etiqueta <option>
-        option.dataset.capacidad = actividad.capacidad;
+        option.dataset.capacidad = actividad.capacidadPersonas;
         option.dataset.precio = actividad.precioBase;
         select.appendChild(option);
     });
@@ -59,6 +60,46 @@ async function cargarActividades() {
             inputPars.value = "Selecciona";
         }
     });
+
+    const selectId = document.getElementById("actividadIdSelect");
+
+    selectId.innerHTML = '<option value="">Seleccionar ID</option>';
+
+// llenar select con IDs
+    datos.forEach(actividad => {
+        const option = document.createElement("option");
+
+        option.value = actividad.id;
+        option.textContent = actividad.id;
+
+        selectId.appendChild(option);
+    });
+
+// autofill
+    selectId.addEventListener("change", function () {
+
+        const actividadSeleccionada = datos.find(
+            a => a.id == this.value
+        );
+
+        if (!actividadSeleccionada) {
+
+            document.getElementById("actividadNombre").value = "";
+            document.getElementById("actividadPrecio").value = "";
+            document.getElementById("actividadCapacidad").value = "";
+
+            return;
+        }
+
+        document.getElementById("actividadNombre").value =
+            actividadSeleccionada.nombre || "";
+
+        document.getElementById("actividadPrecio").value =
+            actividadSeleccionada.precioBase || "";
+
+        document.getElementById("actividadCapacidad").value =
+            actividadSeleccionada.capacidadPersonas || "";
+    });
 }
 
 // Llamada inmediata para cargar los datos al abrir la página
@@ -70,72 +111,161 @@ cargarActividades();
  * ============================================================
  */
 
-function cambiarParticipantes(valorRecibido) {
-    const inputPars = document.getElementById("participantesActividad");
+function cambiarParticipantes(valor) {
+
     const select = document.getElementById("actividadSeleccionada");
 
-    // CAMBIO AQUÍ: Debe ser mostrarAvisoActividad
-    if (select.value === "" || select.value === "Selecciona") {
-        mostrarAvisoActividad("Selecciona una actividad para poder ajustar los participantes.");
+    if (!select.value || select.value === "Selecciona") {
+        mostrarAvisoActividad("Selecciona una actividad primero.");
         return;
     }
 
-    const opcionElegida = select.options[select.selectedIndex];
-    // Agregamos un || 0 por seguridad si el dataset está vacío
-    const limiteReal = parseInt(opcionElegida.dataset.capacidad) || 0;
-    let nuevaCantidad = (parseInt(inputPars.value) || 0) + valorRecibido;
+    const capacidad = parseInt(select.options[select.selectedIndex].dataset.capacidad) || 999;
 
-    if (nuevaCantidad >= 1 && nuevaCantidad <= limiteReal) {
-        inputPars.value = nuevaCantidad;
+    const nuevo = participantesActuales + valor;
+
+    if (nuevo >= 1 && nuevo <= capacidad) {
+        participantesActuales = nuevo;
+
+        document.getElementById("participantesActividad").value = participantesActuales;
+
         actualizarPrecio();
     }
 }
 
-/**
- * ============================================================
- * DISPONIBILIDAD EN TIEMPO REAL
- * ============================================================
- */
 
-function actualizarDisponibilidadVisual() {
-    // Capturamos los 3 datos necesarios para identificar un turno único
-    const id = document.getElementById("actividadSeleccionada").value;
-    const fecha = document.getElementById("fechaActividad").value;
-    const turno = document.getElementById("turnoActividad").value;
+async function probarDisponibilidad(fecha) {
 
-    // Solo disparamos la consulta si el usuario ya llenó los tres campos
-    if (id && fecha && turno) {
-        probarDisponibilidad(id, fecha, turno);
-    }
-}
+    const selectActividad =
+        document.getElementById("actividadSeleccionada");
 
-// Listeners para que la disponibilidad se actualice automáticamente al cambiar inputs
-document.getElementById("actividadSeleccionada").addEventListener("change", actualizarDisponibilidadVisual);
-document.getElementById("fechaActividad").addEventListener("change", actualizarDisponibilidadVisual);
-document.getElementById("turnoActividad").addEventListener("change", actualizarDisponibilidadVisual);
+    const selectTurno =
+        document.getElementById("turnoActividad");
 
-async function probarDisponibilidad(idActividad, fecha, turno) {
     try {
-        // Consultamos al endpoint de disponibilidad
-        const response = await fetch(`http://localhost:8080/hotel/${idActividad}/disponibilidad?fecha=${fecha}&turno=${turno}`, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include"
+
+        const response = await fetch(
+            `http://localhost:8080/hotel/reservas-actividades/ocupadas/${fecha}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Error obteniendo actividades");
+        }
+
+        const reservas = await response.json();
+
+        // =====================================
+        // RESET EVERYTHING
+        // =====================================
+        for (const option of selectActividad.options) {
+            option.disabled = false;
+        }
+
+        for (const option of selectTurno.options) {
+            option.disabled = false;
+        }
+
+        // =====================================
+        // GROUP TURNOS BY ACTIVITY
+        // =====================================
+        const actividadesReservadas = {};
+
+        reservas.forEach(reserva => {
+
+            const idActividad =
+                reserva.actividad.id;
+
+            const turno =
+                reserva.turno;
+
+            if (!actividadesReservadas[idActividad]) {
+                actividadesReservadas[idActividad] = [];
+            }
+
+            actividadesReservadas[idActividad]
+                .push(turno);
         });
 
-        if (!response.ok) throw new Error("Error en la respuesta del servidor");
+        // =====================================
+        // DISABLE ACTIVITIES WITH BOTH TURNOS
+        // =====================================
+        for (const idActividad in actividadesReservadas) {
 
-        const data = await response.json();
-        const select = document.getElementById("actividadSeleccionada");
-        const opcionElegida = select.options[select.selectedIndex];
+            const turnos =
+                actividadesReservadas[idActividad];
 
-        // SOBREESCRIBIMOS el dataset con los cupos reales que quedan en la DB para ese turno
-        opcionElegida.dataset.capacidad = data.cuposDisponibles;
+            // If activity has 2 reserved turnos
+            if (turnos.length >= 2) {
+
+                for (const option of selectActividad.options) {
+
+                    if (
+                        parseInt(option.value) ===
+                        parseInt(idActividad)
+                    ) {
+                        option.disabled = true;
+                    }
+                }
+            }
+        }
+
+        // =====================================
+        // WHEN USER CHOOSES ACTIVITY
+        // DISABLE ONLY RESERVED TURNOS
+        // =====================================
+        selectActividad.addEventListener("change", () => {
+
+            // Enable all turnos first
+            for (const option of selectTurno.options) {
+                option.disabled = false;
+            }
+
+            const actividadSeleccionada =
+                selectActividad.value;
+
+            const turnosReservados =
+                actividadesReservadas[
+                    actividadSeleccionada
+                    ] || [];
+
+            for (const option of selectTurno.options) {
+
+                if (
+                    turnosReservados.includes(
+                        option.value
+                    )
+                ) {
+                    option.disabled = true;
+                }
+            }
+        });
 
     } catch (error) {
-        console.error("Hubo un fallo al conectar con el Controller:", error);
+
+        console.error(
+            "Error al cargar actividades ocupadas:",
+            error
+        );
     }
 }
+
+document.getElementById("btnActividad")
+    .addEventListener("click", () => {
+
+        const modal =
+            new bootstrap.Modal(
+                document.getElementById("modalPago")
+            );
+
+        modal.show();
+    });
 
 /**
  * ============================================================
@@ -143,56 +273,126 @@ async function probarDisponibilidad(idActividad, fecha, turno) {
  * ============================================================
  */
 
-async function reservarActividad() {
-    const fecha = document.getElementById("fechaActividad").value;
-    const selectElement = document.getElementById("actividadSeleccionada");
-    const idActividad = selectElement.value;
-    const turno = document.getElementById("turnoActividad").value;
-    const personas = parseInt(document.getElementById("participantesActividad").value);
-    const userId = localStorage.getItem("id"); // Recuperamos el ID del usuario logueado
+function inicializarModalPago() {
 
-    try {
-        // PASO 1: Creamos la Reserva Maestra vinculada al usuario
-        const res1 = await fetch("http://localhost:8080/hotel/reservas", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ usuario: { id: userId } })
-        });
+    document.addEventListener("click", async (e) => {
 
-        const reserva = await res1.json(); // Obtenemos el ID de reserva generado por la BD
+        if (e.target && e.target.id === "btnConfirmarPago") {
+            const fecha = document.getElementById("fechaActividad").value;
+            const selectElement = document.getElementById("actividadSeleccionada");
+            const idActividad = selectElement.value;
+            const turno = document.getElementById("turnoActividad").value;
+            const personas = parseInt(document.getElementById("participantesActividad").value);
+            const userId = localStorage.getItem("id"); // Recuperamos el ID del usuario logueado
 
-        // PASO 2: Vinculamos la actividad específica a esa reserva maestra
-        const datosActividad = {
-            reservaId: reserva.id,
-            actividadId: idActividad,
-            fecha: fecha,
-            turno: turno,
-            participantes: personas,
-            monto: 0 // El backend calculará el precio final
-        };
+            try {
+                // PASO 1: Creamos la Reserva Maestra vinculada al usuario
+                const res1 = await fetch("http://localhost:8080/hotel/reservas", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({ usuario: { id: userId } })
+                });
 
-        const res2 = await fetch("http://localhost:8080/hotel/reservas-actividades", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify(datosActividad)
-        });
+                const reserva = await res1.json(); // Obtenemos el ID de reserva generado por la BD
 
-        if (res2.ok) {
-            alert("¡Reserva completada!");
-            // Refrescamos disponibilidad para que el dataset se actualice tras la reserva
-            probarDisponibilidad(idActividad, fecha, turno);
-            resetearFormularioActividades();
-        };
+                // PASO 2: Vinculamos la actividad específica a esa reserva maestra
+                const datosActividad = {
+                    reservaId: reserva.id,
+                    actividadId: idActividad,
+                    fecha: fecha,
+                    turno: turno,
+                    participantes: personas,
+                    monto: 0 // El backend calculará el precio final
+                };
 
-    } catch (error) {
-        console.error("Mensaje de error:", error.message);
-    }
+                const res2 = await fetch("http://localhost:8080/hotel/reservas-actividades", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify(datosActividad)
+                });
+
+                if (!res2.ok) {
+                    mostrarAvisoActividad("❌ Error al realizar la reserva", "danger");
+                }
+
+                const modal = bootstrap.Modal.getInstance(
+                    document.getElementById("modalPago")
+                );
+
+                modal.hide();
+
+                setTimeout(() => {
+                    mostrarAvisoActividad("✅ Reserva realizada correctamente", "succes");
+                    resetearFormulario();
+                }, 300);
+
+            } catch (err) {
+                console.error(err);
+                alert("Error de servidor.");
+            }
+        }
+    });
+
+    document.addEventListener("input", (e) => {
+
+        if (!e.target) return;
+
+        const id = e.target.id;
+
+        if (id === "pagoNumero") {
+            e.target.value = formatearNumeroTarjeta(e.target.value);
+        }
+
+        if (
+            id === "pagoNombre" ||
+            id === "pagoNumero" ||
+            id === "pagoExpiracion" ||
+            id === "pagoCVV"
+        ) {
+            validarCamposPago();
+        }
+    });
 }
 
-// Vinculamos la función de reserva al botón principal
-document.getElementById("btnActividad").addEventListener("click", reservarActividad);
+// ===============================
+// FORMATEO DEL NÚMERO DE TARJETA
+// ===============================
+function formatearNumeroTarjeta(valor) {
+    return valor.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim();
+}
+
+// ===============================
+// VALIDACIÓN PREMIUM DE PAGO
+// ===============================
+function validarCamposPago() {
+    const nombre = document.getElementById("pagoNombre").value.trim();
+    const numeroRaw = document.getElementById("pagoNumero").value;
+    const numero = numeroRaw.replace(/\s/g, "");
+    const exp = document.getElementById("pagoExpiracion").value.trim();
+    const cvv = document.getElementById("pagoCVV").value.trim();
+
+    const msgNombre = document.getElementById("msgNombre");
+    const msgNumero = document.getElementById("msgNumero");
+    const msgExp = document.getElementById("msgExp");
+    const msgCVV = document.getElementById("msgCVV");
+
+    msgNombre.textContent = nombre.length < 4 ? "Debe contener al menos 4 caracteres." : "";
+    msgNumero.textContent = numero.length !== 16 ? "La tarjeta debe tener 16 dígitos." : "";
+    msgExp.textContent = exp === "" ? "Selecciona una fecha de expiración." : "";
+    msgCVV.textContent = cvv.length !== 3 ? "El código de seguridad son 3 dígitos." : "";
+
+    const valido =
+        nombre.length >= 4 &&
+        numero.length === 16 &&
+        /^\d+$/.test(numero) &&
+        exp !== "" &&
+        cvv.length === 3 &&
+        /^\d+$/.test(cvv);
+
+    document.getElementById("btnConfirmarPago").disabled = !valido;
+}
 
 /**
  * ============================================================

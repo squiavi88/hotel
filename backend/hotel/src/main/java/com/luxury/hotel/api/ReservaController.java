@@ -18,11 +18,9 @@ import java.util.List;
 public class ReservaController {
 
     private final ReservaService reservaService;
-    private final UsuarioRepository usuarioRepository;
 
-    public ReservaController(ReservaService reservaService, UsuarioRepository usuarioRepository) {
+    public ReservaController(ReservaService reservaService) {
         this.reservaService = reservaService;
-        this.usuarioRepository = usuarioRepository;
     }
 
     @GetMapping("/reservas")
@@ -37,7 +35,7 @@ public class ReservaController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Reserva> createReserva(@RequestBody Reserva reserva) {
 
-        
+
         reserva.setFechaRegistro(LocalDate.now());
         reserva.setPagoFinal(BigDecimal.ZERO);
 
@@ -51,7 +49,7 @@ public class ReservaController {
     }
 
     @DeleteMapping("/reservas/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     public ResponseEntity<Void> deleteReserva(@PathVariable Long id) {
         reservaService.deleteById(id);
         return ResponseEntity.noContent().build();

@@ -1,8 +1,10 @@
 package com.luxury.hotel.api;
 
 
+import com.luxury.hotel.model.Actividad;
 import com.luxury.hotel.model.Habitacion;
 import com.luxury.hotel.servicies.HabitacionService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +26,7 @@ public class HabitacionesController {
     public List<Habitacion> getAllHabitaciones() { return habitacionService.findAll(); }
 
     @PostMapping("/habitaciones")
-    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<Habitacion> saveHabitaciones(@RequestBody List<Habitacion> habitaciones) {
 
         List<Habitacion> changedHabitaciones = new ArrayList<>();
@@ -34,5 +36,24 @@ public class HabitacionesController {
             changedHabitaciones.add(habitacion);
         }
         return changedHabitaciones;
+    }
+
+    @GetMapping("/habitaciones/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    public ResponseEntity<Habitacion> getHabitacionById(@PathVariable Long id) {
+        return ResponseEntity.ok(habitacionService.findById(id));
+    }
+
+    @PutMapping("/habitaciones/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Habitacion> uptadeHabitacion(@PathVariable Long id, @RequestBody Habitacion habitacion) {
+        return ResponseEntity.ok(habitacionService.update(id, habitacion));
+    }
+
+    @DeleteMapping("/habitaciones/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Void> deleteHabitacion(@PathVariable Long id) {
+        habitacionService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

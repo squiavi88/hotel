@@ -25,19 +25,15 @@ public class Mesa {
     private BigDecimal precioBase;
 
 
-    @OneToMany(mappedBy = "mesa")
-    @JsonIgnore
-    private List<ReservaMesa> reservaMesaList;
 
     public Mesa() {
     }
 
-    public Mesa(Long id, Integer numeroMesa, Integer capacidad, BigDecimal precioBase, List<ReservaMesa> reservaMesaList) {
+    public Mesa(Long id, Integer numeroMesa, Integer capacidad, BigDecimal precioBase) {
         this.id = id;
         this.numeroMesa = numeroMesa;
         this.capacidad = capacidad;
         this.precioBase = precioBase;
-        this.reservaMesaList = reservaMesaList;
     }
 
     public Long getId() {
@@ -70,13 +66,5 @@ public class Mesa {
 
     public void setPrecioBase(BigDecimal precioBase) {
         this.precioBase = precioBase;
-    }
-
-    public List<ReservaMesa> getReservaMesaList() {
-        return reservaMesaList;
-    }
-
-    public void setReservaMesaList(List<ReservaMesa> reservaMesaList) {
-        this.reservaMesaList = reservaMesaList;
     }
 }

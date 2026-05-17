@@ -1,7 +1,6 @@
 package com.luxury.hotel.model;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -26,31 +25,32 @@ public class ReservaMesa {
     private Mesa mesa;
 
     @Column(name = "Fecha", nullable = false)
-
     private LocalDate fecha;
 
-    @Column(name = "Turno", nullable = false, length = 50) // <-- Nuevo campo
+    @Column(name = "Turno", nullable = false)
     private String turno;
 
     @Column(name = "Hora", nullable = false)
     private LocalTime hora;
 
-    @Column(name = "Cantidad_Personas", nullable = false) // <-- Nuevo campo
-    private Integer cantidadPersonas;
-
     @Column(name = "Monto_Pago", precision = 10, scale = 2, nullable = false)
     private BigDecimal montoPago;
+
+    @Column(name = "Numero_Personas", nullable = false)
+    private Integer numeroPersonas;
 
     public ReservaMesa() {
     }
 
-    public ReservaMesa(Long id, Reserva reserva, Mesa mesa, LocalDate fecha, LocalTime hora, BigDecimal montoPago) {
+    public ReservaMesa(Long id, Reserva reserva, Mesa mesa, LocalDate fecha, String turno, LocalTime hora, BigDecimal montoPago, Integer numeroPersonas) {
         this.id = id;
         this.reserva = reserva;
         this.mesa = mesa;
         this.fecha = fecha;
+        this.turno = turno;
         this.hora = hora;
         this.montoPago = montoPago;
+        this.numeroPersonas = numeroPersonas;
     }
 
     public Long getId() {
@@ -85,10 +85,13 @@ public class ReservaMesa {
         this.fecha = fecha;
     }
 
-    public String getTurno() {return turno;}
+    public String getTurno() {
+        return turno;
+    }
 
-    public void setTurno(String turno) {this.turno = turno;}
-
+    public void setTurno(String turno) {
+        this.turno = turno;
+    }
 
     public LocalTime getHora() {
         return hora;
@@ -98,16 +101,19 @@ public class ReservaMesa {
         this.hora = hora;
     }
 
-    public Integer getCantidadPersonas() {return cantidadPersonas;}
-
-    public void setCantidadPersonas(Integer cantidadPersonas) {this.cantidadPersonas = cantidadPersonas;}
-
-
     public BigDecimal getMontoPago() {
         return montoPago;
     }
 
     public void setMontoPago(BigDecimal montoPago) {
         this.montoPago = montoPago;
+    }
+
+    public Integer getNumeroPersonas() {
+        return numeroPersonas;
+    }
+
+    public void setNumeroPersonas(Integer numeroPersonas) {
+        this.numeroPersonas = numeroPersonas;
     }
 }

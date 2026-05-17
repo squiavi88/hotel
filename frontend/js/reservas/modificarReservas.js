@@ -1,123 +1,108 @@
-async function cargarHabitacionesModal() {
 
-    try {
+/**
+ * ============================================================
+ * FUNCIÓN PARA CARGAR DATOS AL ESCRIBIR NOMBRE (Autocompletado)
+ * ============================================================
+ */
+document.getElementById('habNombre').addEventListener('blur', async (e) => {
+    const nombre = e.target.value;
+    if (nombre.length > 3) {
+        const resp = await fetch(`http://localhost:8080/hotel/habitaciones/buscarPorNombre?nombre=${encodeURIComponent(nombre)}`);
 
-        const respuesta = await fetch(
-            "http://localhost:8080/hotel/habitaciones",
-            {
-                method: "GET",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include"
-            }
-        );
 
-        const datos = await respuesta.json();
 
-        console.table(datos);
+        if (resp.ok) {
+            const data = await resp.json();
 
-        const select = document.getElementById("habitacionSeleccionadaModal");
+            document.getElementById('habitacionId').value = data.id_habitacion;
+            document.getElementById('habNumero').value = data.Numero_Habitacion;
+            document.getElementById('habDescripcion').value = data.Descripcion;
+            document.getElementById('habTipo').value = data.Tipo_Habitacion;
+            document.getElementById('habPrecio').value = data.precio_noche;
 
-        select.innerHTML =
-            '<option value="">Selecciona una habitación</option>';
-
-        datos.forEach(habitacion => {
-
-            const option = document.createElement("option");
-
-            option.value = habitacion.id;
-            option.textContent = habitacion.nombre;
-
-            // datos backend EXACTOS (según tu entidad)
-            option.dataset.nombre = habitacion.nombre;
-            option.dataset.numero = habitacion.numeroHabitacion;
-            option.dataset.descripcion = habitacion.descripcion;
-            option.dataset.tipo = habitacion.tipoHabitacion;
-            option.dataset.precio = habitacion.precioNoche;
-
-            select.appendChild(option);
-        });
-
-        select.addEventListener("change", function () {
-
-            const opcion = select.options[select.selectedIndex];
-
-            document.getElementById("habitacionId").value =
-                opcion.value;
-
-           
-
-            document.getElementById("habNumero").value =
-                opcion.dataset.numero;
-
-            document.getElementById("habDescripcion").value =
-                opcion.dataset.descripcion;
-
-            document.getElementById("habTipo").value =
-                opcion.dataset.tipo;
-
-            document.getElementById("habPrecio").value =
-                opcion.dataset.precio;
-        });
-
-    } catch (error) {
-        console.error("Error cargando habitaciones:", error);
+            document.getElementById('tituloModalHabitacion').innerText = "Editar Habitación: " + data.Nombre;
+        }
     }
-}
+});
 
-cargarHabitacionesModal();
+/**
+ * ============================================================
+ * EVENT LISTENER PARA EL RESETEO AUTOMÁTICO DEL MODAL
+ * ============================================================
+ * Escucha cuando el modal se oculta (hidden.bs.modal) y limpia
+ * todos los campos de una sola vez usando .reset()
+ */
 
+// 1. Obtenemos la referencia al modal
+const modalHabitacion = document.getElementById('modalGestionHabitacion');
+
+// 2. Creamos el escuchador de eventos de Bootstrap
+modalHabitacion.addEventListener('hidden.bs.modal', function () {
+
+    // Función mágica que resetea todos los inputs y selects del form
+    document.getElementById('formHabitacion').reset();
+
+    // Limpieza manual del ID oculto (el reset no siempre afecta a campos hidden)
+    document.getElementById('habitacionId').value = "";
+
+    // Restauramos el título del modal a su estado original
+    document.getElementById('tituloModalHabitacion').innerText = "Gestionar Habitación";
+
+    console.log("Formulario de habitación limpiado al cerrar el modal.");
+});
+
+/**
+ * ============================================================
+ * EVENT LISTENER PARA EL BOTÓN DE GUARDAR
+ * ============================================================
+ * Escucha el clic en el botón de guardar y ejecuta la función
+ * para enviar los datos (POST o PUT) al servidor.
+ */
+document.getElementById('btnGuardarHabitacion').addEventListener('click', async () => {
+    // Llamamos a la función principal de guardado
+    await guardarHabitacion();
+});
+
+/**
+ * ============================================================
+ * FUNCIÓN PARA GUARDAR (DETECTA SI ES POST O PUT)
+ * ============================================================
+ */
 async function guardarHabitacion() {
+    const id = document.getElementById('habIdSelect').value;
+
+    const habitacion = {
+        nombre: document.getElementById('habNombre').value,
+        descripcion: document.getElementById('habDescripcion').value,
+        numeroHabitacion: parseInt(document.getElementById('habNumero').value),
+        tipoHabitacion: document.getElementById('habTipo').value,
+        precioNoche: parseFloat(document.getElementById('habPrecio').value)
+    };
+
+    const metodo = id ? 'PUT' : 'POST';
+    const url = id ? `http://localhost:8080/hotel/habitaciones/${id}` : `http://localhost:8080/hotel/habitaciones`;
 
     try {
+        const resp = await fetch(url, {
+            method: metodo,
+            headers: { 'Content-Type': 'application/json' },
+            credentials: "include",
+            body: JSON.stringify(habitacion)
+        });
 
-        const idHabitacion = document.getElementById("habitacionId").value;
+        if (resp.ok) {
+            alert("¡Operación realizada con éxito!");
 
-        if (!idHabitacion) {
-            alert("Selecciona una habitación");
-            return;
-        }
+            // Cerramos el modal usando Bootstrap para que el listener de 'hidden' limpie todo
+            const modalElement = document.getElementById('modalGestionHabitacion');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            modalInstance.hide();
 
-        const datosHabitacion = {
-            id: idHabitacion,
-            nombre: document.getElementById("habNombre").value,
-            numeroHabitacion: parseInt(
-                document.getElementById("habNumero").value
-            ),
-            descripcion: document.getElementById("habDescripcion").value,
-            tipoHabitacion: document.getElementById("habTipo").value,
-            precioNoche: parseFloat(
-                document.getElementById("habPrecio").value
-            )
-        };
-
-        const respuesta = await fetch(
-            `http://localhost:8080/hotel/habitacion/${idHabitacion}`,
-            {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify(datosHabitacion)
-            }
-        );
-
-        if (respuesta.ok) {
-
-            alert("Habitación actualizada correctamente");
-
-            const modal =
-                bootstrap.Modal.getInstance(
-                    document.getElementById("modalGestionHabitacion")
-                );
-
-            modal.hide();
-
-            cargarHabitacionesModal();
-
+            location.reload();
         } else {
-            alert("Error al actualizar habitación");
+            alert("Error al procesar la solicitud en el servidor");
         }
-
     } catch (error) {
-        console.error("Error PUT habitación:", error);
+        alert("Error de conexión con el servidor");
     }
 }

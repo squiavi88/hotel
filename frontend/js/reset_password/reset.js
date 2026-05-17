@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
         errores[campo].classList.remove("d-none");
 
         const input = campo === "email" ? emailInput :
-                      campo === "pass1" ? pass1 : pass2;
+            campo === "pass1" ? pass1 : pass2;
 
         input.classList.add("is-invalid");
     }
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         errores[campo].classList.add("d-none");
 
         const input = campo === "email" ? emailInput :
-                      campo === "pass1" ? pass1 : pass2;
+            campo === "pass1" ? pass1 : pass2;
 
         input.classList.remove("is-invalid");
     }

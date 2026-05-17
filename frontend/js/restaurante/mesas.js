@@ -4,16 +4,43 @@
  * =====================================
  */
 let misMesas = [];
-let indiceActual = 0; // Controla la posición actual en el array de mesas
+let indiceActual = 0;
+let mesaSeleccionada = null;
 
 /**
  * =====================================
- * CARGAR MESAS (INICIO)
+ * INICIALIZACIÓN GLOBAL
+ * =====================================
+ */
+document.addEventListener("DOMContentLoaded", () => {
+
+    cargarMesas();
+
+    // BOTÓN RESERVAR → ABRIR MODAL
+    const btn = document.getElementById("btnRestaurante");
+    if (btn) {
+        btn.addEventListener("click", abrirModalPagoMesa);
+    }
+
+    // CARGA DINÁMICA DEL MODAL
+    fetch("./modalPago.html")
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById("modal-pago-container").innerHTML = html;
+
+            setTimeout(() => {
+                inicializarModalPago();
+            }, 0);
+        });
+});
+
+/**
+ * =====================================
+ * CARGAR MESAS
  * =====================================
  */
 async function cargarMesas() {
     try {
-        // Petición GET al servidor para traer todas las mesas disponibles
         const respuesta = await fetch('http://localhost:8080/hotel/mesas', {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -24,57 +51,97 @@ async function cargarMesas() {
             throw new Error(`Error en la petición: ${respuesta.status}`);
         }
 
-        // Guardamos el JSON recibido en nuestro array global 'misMesas'
-        const datos = await respuesta.json();
-        misMesas = datos;
+        misMesas = await respuesta.json();
 
-        // Seteamos valores iniciales en la interfaz al cargar
+        const select =
+            document.getElementById("mesaIdSelect");
+
+        select.innerHTML =
+            '<option value="">Seleccionar ID</option>';
+
+        // llenar select con IDs
+        misMesas.forEach(mesa => {
+
+            const option = document.createElement("option");
+
+            option.value = mesa.id;
+
+            option.textContent = mesa.id;
+
+            select.appendChild(option);
+        });
+
+        // autofill
+        select.addEventListener("change", function () {
+
+            const mesaSeleccionada =
+                misMesas.find(
+                    m => m.id == this.value
+                );
+
+            if (!mesaSeleccionada) {
+
+                document.getElementById("mesaNumero").value = "";
+                document.getElementById("mesaCapacidad").value = "";
+                document.getElementById("mesaPrecio").value = "";
+
+                return;
+            }
+
+            document.getElementById("mesaNumero").value =
+                mesaSeleccionada.numeroMesa || "";
+
+            document.getElementById("mesaCapacidad").value =
+                mesaSeleccionada.capacidad || "";
+
+            document.getElementById("mesaPrecio").value =
+                mesaSeleccionada.precioBase || "";
+        });
+
         document.getElementById("mesaRestaurante").value = 1;
         document.getElementById("personasRestaurante").value = 1;
 
-        cargarPrecio(); // Calculamos el precio inicial
+        cargarPrecio();
 
     } catch (error) {
-        console.error("Hubo un problema con la petición fetch:", error);
+        console.error("Error cargando mesas:", error);
     }
 }
 
-// Ejecución automática al cargar el script
-cargarMesas();
-
 /**
  * =====================================
- * CARGAR PRECIO
+ * PRECIO BASE
  * =====================================
  */
 function cargarPrecio() {
+
+    const mesa = misMesas[indiceActual];
+    if (!mesa) return;
+
     const cantidad = parseInt(document.getElementById("personasRestaurante").value);
     const totalInput = document.getElementById("totalRestaurante");
 
-    // Buscamos el objeto mesa dentro del array usando el índice actual
-    const mesaActual = misMesas[indiceActual];
-
-    // Multiplicamos personas por el precioBase de la mesa actual
-    if (mesaActual && mesaActual.precioBase) {
-        const total = cantidad * mesaActual.precioBase;
+    if (mesa.precioBase) {
+        const total = cantidad * mesa.precioBase;
         totalInput.textContent = ` ${total} €`;
     }
 }
 
 /**
  * =====================================
- * ACTUALIZAR PRECIO INTERFAZ
+ * ACTUALIZAR PRECIO UI
  * =====================================
  */
 function actualizarPrecioInterfaz() {
+
     const displayTotal = document.getElementById("totalRestaurante");
     const cantidadPersonas = parseInt(document.getElementById("personasRestaurante").value);
 
-    // Obtenemos el precio directamente desde la memoria (array global)
-    const precioBaseNuevaMesa = misMesas[indiceActual].precioBase;
-    const total = cantidadPersonas * precioBaseNuevaMesa;
+    const mesa = misMesas[indiceActual];
+    if (!mesa) return;
 
-    // Detectamos si el destino es un INPUT o un elemento de texto (SPAN/DIV)
+    const total = cantidadPersonas * mesa.precioBase;
+
     if (displayTotal.tagName === "INPUT") {
         displayTotal.value = total;
     } else {
@@ -87,26 +154,24 @@ function actualizarPrecioInterfaz() {
  * CAMBIAR MESA
  * =====================================
  */
-function cambiarMesa(valorRecibido) {
-    // Sumamos o restamos al índice actual (0, 1, 2...)
-    let nuevoIndice = indiceActual + valorRecibido;
+function cambiarMesa(valor) {
 
-    // Verificamos que el nuevo índice no se salga de los límites del array
-    if (nuevoIndice >= 0 && nuevoIndice < misMesas.length) {
-        indiceActual = nuevoIndice;
+    const nuevo = indiceActual + valor;
 
-        // Actualizamos el número de mesa visualmente desde el array
-        document.getElementById("mesaRestaurante").value = misMesas[indiceActual].numeroMesa;
+    if (nuevo >= 0 && nuevo < misMesas.length) {
+        indiceActual = nuevo;
 
-        // Reseteamos personas a 1 para evitar errores de capacidad al cambiar de mesa
+        document.getElementById("mesaRestaurante").value =
+            misMesas[indiceActual].numeroMesa;
+
         document.getElementById("personasRestaurante").value = 1;
+
         actualizarPrecioInterfaz();
     }
-    // Si ya hay una fecha seleccionada, debemos REFRESCAR los bloqueos
-    // para la nueva mesa que acabamos de seleccionar.
-    const fechaElegida = document.getElementById("fechaRestaurante").value;
-    if (fechaElegida) {
-        datosOcupados(null, fechaElegida);
+
+    const fecha = document.getElementById("fechaRestaurante").value;
+    if (fecha) {
+        datosOcupados(null, fecha);
     }
 }
 
@@ -115,17 +180,17 @@ function cambiarMesa(valorRecibido) {
  * CAMBIAR PERSONAS
  * =====================================
  */
-function cambiarPersona(valorRecibido) {
-    let inputPersonas = document.getElementById("personasRestaurante");
-    let personasActuales = parseInt(inputPersonas.value);
-    let personasNuevas = personasActuales + valorRecibido;
+function cambiarPersonas(valor) {
 
-    // Consultamos la capacidad máxima permitida de la mesa seleccionada actualmente
-    let valorMaximo = misMesas[indiceActual].capacidad;
+    const input = document.getElementById("personasRestaurante");
+    let actuales = parseInt(input.value);
+    let nuevas = actuales + valor;
 
-    // Validamos que no sea menor a 1 ni mayor a la capacidad de la mesa
-    if (personasNuevas > 0 && personasNuevas <= valorMaximo) {
-        inputPersonas.value = personasNuevas;
+    const mesa = misMesas[indiceActual];
+    if (!mesa) return;
+
+    if (nuevas > 0 && nuevas <= mesa.capacidad) {
+        input.value = nuevas;
         cargarPrecio();
         actualizarPrecioInterfaz();
     }
@@ -174,60 +239,178 @@ horas.addEventListener("change", function () {
     validarReserva();
 });
 
+
 /**
  * =====================================
- * RESERVAR (ENVÍO AL BACKEND)
+ * ABRIR MODAL PAGO
  * =====================================
  */
-async function reservarMesa() {
+function abrirModalPagoMesa() {
+
+    if (!misMesas.length) return;
+
+    mesaSeleccionada = misMesas[indiceActual];
+
     const fecha = document.getElementById("fechaRestaurante").value;
-    const turno = document.getElementById("turnoRestaurante").value;
-    const hora = document.getElementById("horaRestaurante").value + ":00";
+    const hora = document.getElementById("horaRestaurante").value;
     const personas = parseInt(document.getElementById("personasRestaurante").value);
 
-    // Obtenemos el ID real de la base de datos desde nuestro array global
-    const mesaIdReal = misMesas[indiceActual].id;
-    const userId = localStorage.getItem("id");
+    const total = personas * mesaSeleccionada.precioBase;
 
-    try {
-        // PASO 1: Crear la reserva general (Cabecera)
-        const res1 = await fetch("http://localhost:8080/hotel/reservas", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ usuario: { id: userId } })
-        });
+    const resumen = document.getElementById("resumenPago");
 
-        const reserva = await res1.json();
+    if (!resumen) return;
 
-        // PASO 2: Crear el detalle de la reserva (Asignar mesa y horario)
-        const datosMesa = {
-            reservaID: reserva.id, // ID recibido del Paso 1
-            mesaId: mesaIdReal,
-            fecha: fecha,
-            turno: turno,
-            hora: hora,
-            cantidadPersonas: personas
-        };
+    resumen.textContent =
+        `Mesa ${mesaSeleccionada.numeroMesa} · ${personas} persona(s) · ${fecha} ${hora} · Total: ${total} €`;
 
-        const res2 = await fetch("http://localhost:8080/hotel/reservas-mesas", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify(datosMesa)
-        });
+    ["pagoNombre", "pagoNumero", "pagoExpiracion", "pagoCVV"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+    });
 
-        if (res2.ok) {
-            alert("¡Reserva completada!");
-            resetearFormulario();
-        };
+    ["msgNombre", "msgNumero", "msgExp", "msgCVV"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = "";
+    });
 
-    } catch (error) {
-        console.log("error");
-    }
+    const btn = document.getElementById("btnConfirmarPago");
+    if (btn) btn.disabled = true;
+
+    const modalEl = document.getElementById("modalPago");
+    if (!modalEl) return;
+
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+
+    validarCamposPago();
 }
 
-document.getElementById("btnRestaurante").addEventListener("click", reservarMesa);
+// ===============================
+// VALIDACIÓN PREMIUM DE PAGO
+// ===============================
+function validarCamposPago() {
+    const nombre = document.getElementById("pagoNombre").value.trim();
+    const numeroRaw = document.getElementById("pagoNumero").value;
+    const numero = numeroRaw.replace(/\s/g, "");
+    const exp = document.getElementById("pagoExpiracion").value.trim();
+    const cvv = document.getElementById("pagoCVV").value.trim();
+
+    const msgNombre = document.getElementById("msgNombre");
+    const msgNumero = document.getElementById("msgNumero");
+    const msgExp = document.getElementById("msgExp");
+    const msgCVV = document.getElementById("msgCVV");
+
+    msgNombre.textContent = nombre.length < 4 ? "Debe contener al menos 4 caracteres." : "";
+    msgNumero.textContent = numero.length !== 16 ? "La tarjeta debe tener 16 dígitos." : "";
+    msgExp.textContent = exp === "" ? "Selecciona una fecha de expiración." : "";
+    msgCVV.textContent = cvv.length !== 3 ? "El código de seguridad son 3 dígitos." : "";
+
+    const valido =
+        nombre.length >= 4 &&
+        numero.length === 16 &&
+        /^\d+$/.test(numero) &&
+        exp !== "" &&
+        cvv.length === 3 &&
+        /^\d+$/.test(cvv);
+
+    document.getElementById("btnConfirmarPago").disabled = !valido;
+}
+
+/**
+ * =====================================
+ * MODAL PAYMENT LOGIC
+ * =====================================
+ */
+function inicializarModalPago() {
+
+    document.addEventListener("click", async (e) => {
+
+        if (e.target && e.target.id === "btnConfirmarPago") {
+
+            const fecha = document.getElementById("fechaRestaurante").value;
+            const turno = document.getElementById("turnoRestaurante").value;
+            const hora = document.getElementById("horaRestaurante").value + ":00";
+            const personas = parseInt(document.getElementById("personasRestaurante").value);
+
+            const mesaId = mesaSeleccionada.id;
+            const userId = localStorage.getItem("id");
+
+            try {
+                const res1 = await fetch("http://localhost:8080/hotel/reservas", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({ usuario: { id: userId } })
+                });
+
+                const reserva = await res1.json();
+
+                const datos = {
+                    reservaId: reserva.id,
+                    mesaId,
+                    fecha,
+                    turno,
+                    hora,
+                    numeroPersonas: personas
+                };
+
+                const res2 = await fetch("http://localhost:8080/hotel/reservas-mesas", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify(datos)
+                });
+
+                if (!res2.ok) {
+                    mostrarAvisoMesa("❌ Error al realizar la reserva", "danger");
+                }
+
+                const modal = bootstrap.Modal.getInstance(
+                    document.getElementById("modalPago")
+                );
+
+                modal.hide();
+
+                setTimeout(() => {
+                    mostrarAvisoMesa("✅ Reserva realizada correctamente", "succes");
+                    resetearFormulario();
+                }, 300);
+
+            } catch (err) {
+                console.error(err);
+                alert("Error de servidor.");
+            }
+        }
+    });
+
+    document.addEventListener("input", (e) => {
+
+        if (!e.target) return;
+
+        const id = e.target.id;
+
+        if (id === "pagoNumero") {
+            e.target.value = formatearNumeroTarjeta(e.target.value);
+        }
+
+        if (
+            id === "pagoNombre" ||
+            id === "pagoNumero" ||
+            id === "pagoExpiracion" ||
+            id === "pagoCVV"
+        ) {
+            validarCamposPago();
+        }
+    });
+}
+
+// ===============================
+// FORMATEO DEL NÚMERO DE TARJETA
+// ===============================
+function formatearNumeroTarjeta(valor) {
+    return valor.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim();
+}
 
 /**
  * =====================================
@@ -274,19 +457,22 @@ async function datosOcupados(selectDates, dateStr) {
  */
 async function datosBloqueados(datosRecibidos, dateStr) {
     const selector = document.getElementById("horaRestaurante");
-    const turnoActual = document.getElementById("turnoRestaurante").value;
 
-    // Habilitamos todas las opciones primero para limpiar bloqueos anteriores
+    // Reset: enable everything first
     for (const opcion of selector.options) {
         opcion.disabled = false;
     }
 
-    // Recorremos las reservas ocupadas recibidas del servidor
     datosRecibidos.forEach(reserva => {
-        // Si coinciden fecha y turno, deshabilitamos la opción de hora correspondiente
-        if (reserva.fecha === dateStr && reserva.turno === turnoActual) {
+        // LocalDate → "YYYY-MM-DD"
+        const fecha = reserva.fecha;
+
+        // LocalTime → normalize to "HH:mm"
+        const hora = reserva.hora?.slice(0, 5);
+
+        if (fecha === dateStr && hora) {
             for (const opcion of selector.options) {
-                if (reserva.hora.includes(opcion.value) && opcion.value !== "") {
+                if (opcion.value === hora) {
                     opcion.disabled = true;
                 }
             }
@@ -296,80 +482,73 @@ async function datosBloqueados(datosRecibidos, dateStr) {
 
 /**
  * =====================================
- * LÓGICA DE VALIDACIÓN (BOTÓN)
+ * VALIDACIÓN RESERVA
  * =====================================
  */
 function validarReserva() {
-    const fecha = document.getElementById("fechaRestaurante").value.trim();
+
+    const fecha = document.getElementById("fechaRestaurante").value;
     const turno = document.getElementById("turnoRestaurante").value;
     const hora = document.getElementById("horaRestaurante").value;
-    const boton = document.getElementById("btnRestaurante");
+    const btn = document.getElementById("btnRestaurante");
 
-    // Comprobamos que todos los campos necesarios tengan valor
-    const isFechaOk = fecha.length > 0;
-    const isTurnoOk = (turno !== "" && turno !== "Selecciona");
-    const isHoraOk = (hora !== "" && hora !== "Selecciona" && hora !== "Selecciona una hora");
+    const ok = fecha && turno && hora && hora !== "Selecciona";
 
-    if (isFechaOk && isTurnoOk && isHoraOk) {
-        // Habilitamos botón si todo está OK
-        boton.disabled = false;
-        boton.style.opacity = "1";
-        boton.style.backgroundColor = "#212529";
+    if (ok) {
+        btn.disabled = false;
+        btn.style.opacity = "1";
     } else {
-        // Mantenemos deshabilitado si falta algo
-        boton.disabled = true;
-        boton.style.opacity = "0.5";
+        btn.disabled = true;
+        btn.style.opacity = "0.5";
     }
 }
 
 /**
  * =====================================
- * RESETEAR FORMULARIO
+ * RESET FORM
  * =====================================
  */
 function resetearFormulario() {
-    // Volvemos a la primera mesa del array
+
     indiceActual = 0;
 
-    // Restauramos valores visuales por defecto
-    document.getElementById("mesaRestaurante").value = misMesas[0].numeroMesa;
+    if (!misMesas.length) return;
+
+    document.getElementById("mesaRestaurante").value =
+        misMesas[0].numeroMesa;
+
     document.getElementById("personasRestaurante").value = 1;
 
-    // Limpiamos el calendario de Flatpickr
-    const calendario = document.querySelector("#fechaRestaurante")._flatpickr;
-    if (calendario) {
-        calendario.clear();
-    }
+    const fp = document.querySelector("#fechaRestaurante")?._flatpickr;
+    if (fp) fp.clear();
 
-    // Reseteamos selectores a sus estados vacíos
-    const turno = document.getElementById("turnoRestaurante");
-    const hora = document.getElementById("horaRestaurante");
-
-    turno.value = "";
-    hora.innerHTML = '<option value="">Selecciona una hora</option>';
+    document.getElementById("turnoRestaurante").value = "";
+    document.getElementById("horaRestaurante").innerHTML =
+        '<option value="">Selecciona una hora</option>';
 
     actualizarPrecioInterfaz();
 
-    // Bloqueamos el botón de reserva nuevamente
-    const boton = document.getElementById("btnRestaurante");
-    boton.disabled = true;
-    boton.style.opacity = "0.5";
-    //boton.style.cursor = "not-allowed";
-
-    console.log("Formulario reseteado con éxito");
+    const btn = document.getElementById("btnRestaurante");
+    if (btn) {
+        btn.disabled = true;
+        btn.style.opacity = "0.5";
+    }
 }
 
-/**
- * =====================================
- * ANIMACIÓN BOTONES
- * =====================================
- */
-document.addEventListener("DOMContentLoaded", () => {
-    // Añade un efecto visual rápido al hacer click en botones de clase .btn-dark
-    document.querySelectorAll(".btn-dark").forEach(btn => {
-        btn.addEventListener("click", () => {
-            btn.classList.add("btn-anim-active");
-            setTimeout(() => btn.classList.remove("btn-anim-active"), 120);
-        });
-    });
-});
+function mostrarAvisoMesa(mensaje, tipo = "warning") {
+    const contenedor = document.getElementById('mensajeAlertaMesa');
+    contenedor.innerHTML = `
+        <div class="alert alert-${tipo} alert-dismissible fade show small py-2 mb-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> ${mensaje}
+            <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+    // Autocerrado tras 4 segundos para no ensuciar la vista
+    setTimeout(() => {
+        const alerta = document.querySelector('#mensajeAlertaMesa .alert');
+        if (alerta) {
+            const bsAlert = new bootstrap.Alert(alerta);
+            bsAlert.close();
+        }
+    }, 4000);
+}

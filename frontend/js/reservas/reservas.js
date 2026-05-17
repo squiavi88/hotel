@@ -72,7 +72,23 @@ async function inicializarCalendarios() {
 
         const salidaPicker = flatpickr(salidaInput, {
             minDate: "today",
-            disable: fechasOcupadas,
+            disable: [
+                function (date) {
+
+                    const entradaSeleccionada = entradaInput.value;
+
+                    if (!entradaSeleccionada) return false;
+
+                    const entradaDate = new Date(entradaSeleccionada + "T00:00:00");
+
+                    return fechasOcupadas.some(rango => {
+
+                        const reservaEntrada = new Date(rango.from + "T00:00:00");
+
+                        return entradaDate < reservaEntrada && date >= reservaEntrada;
+                    });
+                }
+            ],
             dateFormat: "Y-m-d",
             onChange: () => actualizarTotal(id)
         });
@@ -176,74 +192,96 @@ function validarCamposPago() {
     document.getElementById("btnConfirmarPago").disabled = !valido;
 }
 
+
 // ===============================
-// LISTENERS DE CAMPOS
+// CONFIRMAR PAGO → RESERVA REAL
 // ===============================
-["pagoNombre", "pagoNumero", "pagoExpiracion", "pagoCVV"].forEach(id => {
-    document.getElementById(id).addEventListener("input", (e) => {
+function inicializarModalPago() {
+
+    // Event delegation (works even if modal is injected later)
+    document.addEventListener("click", async (e) => {
+
+        if (e.target && e.target.id === "btnConfirmarPago") {
+
+            const id = habitacionSeleccionada;
+
+            const entrada = document.getElementById(`entrada${id}`).value;
+            const salida = document.getElementById(`salida${id}`).value;
+
+            const noches = calcularNoches(entrada, salida);
+            const precio = precios[id];
+            const total = noches * precio;
+
+            const userId = localStorage.getItem("id");
+
+            try {
+                const res1 = await fetch("http://localhost:8080/hotel/reservas", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({ usuario: { id: userId } })
+                });
+
+                const reserva = await res1.json();
+
+                const res2 = await fetch("http://localhost:8080/hotel/reservas-habitaciones", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        reservaId: reserva.id,
+                        habitacionId: id,
+                        fechaEntrada: entrada,
+                        fechaSalida: salida
+                    })
+                });
+
+                if (!res2.ok) {
+                    return mostrarMensajeReserva("Error al asignar habitación.", "danger");
+                }
+
+                const modal = bootstrap.Modal.getInstance(
+                    document.getElementById("modalPago")
+                );
+
+                modal.hide();
+
+                setTimeout(async () => {
+                    await cargarHabitaciones();
+                    mostrarMensajeReserva(
+                        `Reserva realizada correctamente. Total: ${total} €`,
+                        "success"
+                    );
+                }, 300);
+
+            } catch (error) {
+                console.error(error);
+                mostrarMensajeReserva("Error al conectar con el servidor.", "danger");
+            }
+        }
+    });
+
+    // inputs (also delegated-safe alternative)
+    document.addEventListener("input", (e) => {
+
+        if (!e.target) return;
+
+        const id = e.target.id;
 
         if (id === "pagoNumero") {
             e.target.value = formatearNumeroTarjeta(e.target.value);
         }
 
-        validarCamposPago();
-    });
-});
-
-// ===============================
-// CONFIRMAR PAGO → RESERVA REAL
-// ===============================
-document.getElementById("btnConfirmarPago").addEventListener("click", async () => {
-
-    const id = habitacionSeleccionada;
-
-    const entrada = document.getElementById(`entrada${id}`).value;
-    const salida = document.getElementById(`salida${id}`).value;
-
-    const noches = calcularNoches(entrada, salida);
-    const precio = precios[id];
-    const total = noches * precio;
-
-    const userId = localStorage.getItem("id");
-
-    try {
-        // 1. Crear reserva
-        const res1 = await fetch("http://localhost:8080/hotel/reservas", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ usuario: { id: userId } })
-        });
-
-        const reserva = await res1.json();
-
-        // 2. Asignar habitación
-        const res2 = await fetch("http://localhost:8080/hotel/reservas-habitaciones", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({
-                reservaId: reserva.id,
-                habitacionId: id,
-                fechaEntrada: entrada,
-                fechaSalida: salida
-            })
-        });
-
-        if (!res2.ok) {
-            return mostrarMensajeReserva("Error al asignar habitación.", "danger");
+        if (
+            id === "pagoNombre" ||
+            id === "pagoNumero" ||
+            id === "pagoExpiracion" ||
+            id === "pagoCVV"
+        ) {
+            validarCamposPago();
         }
-
-        mostrarMensajeReserva(`Reserva realizada correctamente. Total: ${total} €`, "success");
-
-        // Cerrar modal
-        bootstrap.Modal.getInstance(document.getElementById("modalPago")).hide();
-
-    } catch (error) {
-        console.error(error);
-        mostrarMensajeReserva("Error al conectar con el servidor.", "danger");
-    }
-});
+    });
+}
 
 async function cargarHabitaciones() {
     try {
@@ -257,6 +295,54 @@ async function cargarHabitaciones() {
 
         const habitaciones = await response.json();
         renderizarHabitaciones(habitaciones);
+
+        const select = document.getElementById("habIdSelect");
+
+        // limpiar opciones excepto la primera
+        select.innerHTML = '<option value="">Seleccionar ID</option>';
+
+        habitaciones.forEach(habitacion => {
+            const option = document.createElement("option");
+
+            option.value = habitacion.id;
+            option.textContent = habitacion.id;
+
+            select.appendChild(option);
+        });
+
+        // Cuando cambia el select
+        select.addEventListener("change", function () {
+
+            const habitacionSeleccionada = habitaciones.find(
+                h => h.id == this.value
+            );
+
+            // Si no selecciona nada
+            if (!habitacionSeleccionada) {
+                document.getElementById("habNombre").value = "";
+                document.getElementById("habNumero").value = "";
+                document.getElementById("habDescripcion").value = "";
+                document.getElementById("habTipo").value = "SIMPLE";
+                document.getElementById("habPrecio").value = "";
+                return;
+            }
+
+            // Autofill de campos
+            document.getElementById("habNombre").value =
+                habitacionSeleccionada.nombre || "";
+
+            document.getElementById("habNumero").value =
+                habitacionSeleccionada.numeroHabitacion || "";
+
+            document.getElementById("habDescripcion").value =
+                habitacionSeleccionada.descripcion || "";
+
+            document.getElementById("habTipo").value =
+                habitacionSeleccionada.tipoHabitacion || "SIMPLE";
+
+            document.getElementById("habPrecio").value =
+                habitacionSeleccionada.precioNoche || "";
+        });
 
     } catch (error) {
         console.error("Error:", error);
