@@ -161,7 +161,9 @@
             <div class="modal-content bg-white shadow-lg border-0">
 
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold text-dark" id="tituloModalHabitacion">Gestionar Habitación</h5>
+                    <h5 class="modal-title fw-bold text-dark" id="tituloModalHabitacion">
+                        Gestionar Habitación
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
@@ -170,45 +172,59 @@
                         <input type="hidden" id="habitacionId">
 
                         <div class="row">
+                            <!-- NOMBRE (SELECT) -->
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold text-secondary">Nombre de la Habitación</label>
-                                <input type="text" id="habNombre" class="form-control"
-                                    placeholder="Ej: Suite Imperial UNO">
+                                <label class="form-label fw-bold text-secondary">
+                                    Nombre de la Habitación
+                                </label>
+                                <select id="habitacionSeleccionadaModal" class="form-select">
+                                    <option value="">Seleccione una habitación</option>
+                                    
+                                </select>
                             </div>
+
+                            <!-- NUMERO -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold text-secondary">Número</label>
-                                <input type="number" id="habNumero" class="form-control" placeholder="Ej: 101">
+                                <input type="text" id="habNumero" class="form-control" placeholder="Ej: 101">
                             </div>
                         </div>
 
+                        <!-- DESCRIPCIÓN (SE QUEDA IGUAL) -->
                         <div class="mb-3">
                             <label class="form-label fw-bold text-secondary">Descripción</label>
                             <textarea id="habDescripcion" class="form-control" rows="3"></textarea>
                         </div>
 
                         <div class="row">
+                            <!-- TIPO -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold text-secondary">Tipo</label>
-                                <select id="habTipo" class="form-select">
-                                    <option value="Individual">Individual</option>
-                                    <option value="Doble">Doble</option>
-                                    <option value="Suite">Suite</option>
-                                    <option value="Familiar">Familiar</option>
-                                </select>
+                                <input type="text" id="habTipo" class="form-control"
+                                    placeholder="Ej: Individual, Doble, Suite">
                             </div>
+
+                            <!-- PRECIO -->
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold text-secondary">Precio por Noche (€)</label>
-                                <input type="number" id="habPrecio" class="form-control" step="0.01">
+                                <label class="form-label fw-bold text-secondary">
+                                    Precio por Noche (€)
+                                </label>
+                                <input type="text" id="habPrecio" class="form-control" placeholder="Ej: 120.00">
                             </div>
                         </div>
+
                     </form>
                 </div>
 
                 <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" id="btnGuardarHabitacion" class="btn btn-primary px-4 fw-bold"">Guardar
-                        Cambios</button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="button" id="btnGuardarHabitacion" class="btn btn-primary px-4 fw-bold">
+                        Guardar Cambios
+                    </button>
                 </div>
+
             </div>
         </div>
     </div>
@@ -216,11 +232,11 @@
     <!-- Bootstrap JS -->
     <script src=" ./js/bootstrap/bootstrap.bundle.min.js"></script>
 
-                        <!-- Scripts -->
-                        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-                        <script src="./js/global/global.js"></script>
-                        <script src="./js/reservas/reservas.js"></script>
-                        <script src="./js/reservas/modificarReservas.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="./js/global/global.js"></script>
+    <script src="./js/reservas/reservas.js"></script>
+    <script src="./js/reservas/modificarReservas.js"></script>
 
 </body>
 
