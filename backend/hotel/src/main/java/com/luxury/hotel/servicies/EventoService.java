@@ -42,7 +42,7 @@ public class EventoService implements ServiceInterface<Evento, Long> {
 
         modified.setNombre(evento.getNombre());
         modified.setPrecioBase(evento.getPrecioBase());
-
+        modified.setCapacidadPersonas(evento.getCapacidadPersonas());
         return eventoRepository.save(modified);
     }
 }

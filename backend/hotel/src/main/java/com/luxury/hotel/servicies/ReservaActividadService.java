@@ -67,6 +67,8 @@ public class ReservaActividadService implements ServiceInterface<ReservaActivida
 
         return reservaActividadRepository.save(modified);
     }
+
+
     public DisponibilidadActividadDTO consultarDisponibilidad(Long actividadId, java.time.LocalDate fecha, String turno) {
         // A. CAPACIDAD TOTAL: La trae de la configuración de la actividad (ej: 20 personas)
         var actividad = actividadService.findById(actividadId);
