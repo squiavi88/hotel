@@ -1,106 +1,111 @@
-/**
- * ============================================================
- * GESTIÓN DE MESAS - PANEL DE ADMINISTRACIÓN
- * ============================================================
- */
-
-// Identificamos el modal para el Listener de limpieza
-const modalMesaElement = document.getElementById('modalGestionMesa');
-
-/**
- * ============================================================
- * EVENT LISTENER PARA EL RESETEO AUTOMÁTICO (hidden.bs.modal)
- * ============================================================
- */
-modalMesaElement.addEventListener('hidden.bs.modal', function () {
-    // Resetea todos los campos del formulario de una sola vez
-    document.getElementById('formMesa').reset();
-    
-    // Limpiamos el ID oculto manualmente
-    document.getElementById('mesaId').value = "";
-    
-    // Restauramos el título original
-    document.getElementById('tituloModalMesa').innerText = "Gestionar Mesa";
-    
-    console.log("Formulario de mesa reseteado automáticamente.");
-});
-
-/**
- * ============================================================
- * FUNCIÓN PARA CARGAR DATOS AL ESCRIBIR NÚMERO (Autocompletado)
- * ============================================================
- */
-document.getElementById('mesaNumero').addEventListener('blur', async (e) => {
-    const numero = e.target.value;
-    if (numero.length > 0) {
-        try {
-            // Ruta directa en el fetch para buscar por número
-            const resp = await fetch(`http://localhost:8080/hotel/mesa/buscar/${numero}`);
-            if (resp.ok) {
-                const data = await resp.json();
-                
-                // Rellenamos los campos con los datos de la DB
-                document.getElementById('mesaId').value = data.id_mesa;
-                document.getElementById('mesaCapacidad').value = data.Capacidad;
-                document.getElementById('mesaPrecio').value = data.precio_base;
-                
-                document.getElementById('tituloModalMesa').innerText = "Editar Mesa Nº: " + data.Numero_mesa;
-            }
-        } catch (error) {
-            console.error("Error en el autocompletado de mesa:", error);
-        }
-    }
-});
-
-/**
- * ============================================================
- * EVENT LISTENER PARA EL BOTÓN DE GUARDAR
- * ============================================================
- */
-document.getElementById('btnGuardarMesa').addEventListener('click', async () => {
-    // Ejecutamos la función de guardado al hacer clic
-    await guardarMesa();
-});
-
-/**
- * ============================================================
- * FUNCIÓN PARA GUARDAR (DETECTA SI ES POST O PUT)
- * ============================================================
- */
-async function guardarMesa() {
-    const id = document.getElementById('mesaId').value;
-    
-    // Construimos el objeto con los campos de tu phpMyAdmin
-    const mesa = {
-        Numero_mesa: parseInt(document.getElementById('mesaNumero').value),
-        Capacidad: parseInt(document.getElementById('mesaCapacidad').value),
-        precio_base: parseFloat(document.getElementById('mesaPrecio').value)
-    };
-
-    // Definimos método y ruta directamente
-    const metodo = id ? 'PUT' : 'POST';
-    const url = id ? `http://localhost:8080/hotel/mesa/${id}` : `http://localhost:8080/hotel/mesa`;
+async function cargarMesasModal() {
 
     try {
-        const resp = await fetch(url, {
-            method: metodo,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(mesa)
+
+        const respuesta = await fetch(
+            "http://localhost:8080/hotel/mesas",
+            {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include"
+            }
+        );
+
+        const datos = await respuesta.json();
+
+        console.table(datos)
+        const select = document.getElementById("mesaSeleccionadaModal");
+
+        select.innerHTML =
+            '<option value="">Selecciona una mesa</option>';
+
+        datos.forEach(mesa => {
+
+            const option = document.createElement("option");
+
+            option.value = mesa.id;
+            option.textContent =  mesa.numeroMesa;
+
+            // 🔥 nombres EXACTOS del backend
+            option.dataset.numero = mesa.numeroMesa;
+            option.dataset.capacidad = mesa.capacidad;
+            option.dataset.precio = mesa.precioBase;
+
+            select.appendChild(option);
         });
 
-        if (resp.ok) {
-            alert("¡Operación realizada con éxito!");
-            
-            // Cerramos el modal (esto activa el reset automático del listener)
-            const modalInstance = bootstrap.Modal.getInstance(modalMesaElement);
-            modalInstance.hide();
-            
-            location.reload(); 
-        } else {
-            alert("Error al procesar la solicitud en el servidor");
-        }
+        select.addEventListener("change", function () {
+
+            const opcion = select.options[select.selectedIndex];
+
+            document.getElementById("mesaId").value =
+                opcion.value;
+
+
+            document.getElementById("mesaCapacidad").value =
+                opcion.dataset.capacidad;
+
+            document.getElementById("mesaPrecio").value =
+                opcion.dataset.precio;
+        });
+
     } catch (error) {
-        console.error("Error de conexión:", error);
-        alert("Error de conexión con el servidor");
+        console.error(error);
+    }
+}
+ cargarMesasModal()
+async function guardarMesa() {
+
+    try {
+
+        const idMesa = document.getElementById("mesaId").value;
+
+        if (!idMesa) {
+            alert("Selecciona una mesa");
+            return;
+        }
+
+        const datosMesa = {
+            id: idMesa,
+            numeroMesa: parseInt(
+                document.getElementById("mesaNumero").value
+            ),
+            capacidad: parseInt(
+                document.getElementById("mesaCapacidad").value
+            ),
+            precioBase: parseFloat(
+                document.getElementById("mesaPrecio").value
+            )
+        };
+
+        const respuesta = await fetch(
+            `http://localhost:8080/hotel/mesa/${idMesa}`,
+            {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(datosMesa)
+            }
+        );
+
+        if (respuesta.ok) {
+
+            alert("Mesa actualizada correctamente");
+
+            const modal =
+                bootstrap.Modal.getInstance(
+                    document.getElementById("modalGestionMesa")
+                );
+
+            modal.hide();
+
+            cargarMesasModal();
+
+        } else {
+            alert("Error al actualizar mesa");
+        }
+
+    } catch (error) {
+        console.error("Error PUT:", error);
     }
 }

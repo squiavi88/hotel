@@ -296,48 +296,57 @@
         </div>
     </div>
 
-    <!-- MODAL para modificar campos de eventos -->
-
-    <div class="modal fade" id="modalGestionEvento" tabindex="-1" aria-hidden="true">
+    <!-- MODAL GESTION EVENTO -->
+    <div class="modal fade" id="modalGestionEvento" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-white border-0 shadow-lg">
-                <div class="modal-header border-bottom-0">
-                    <h5 class="modal-title fw-bold text-dark" id="tituloModalEvento">Gestionar Evento</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content bg-white shadow-lg border-0">
+
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Gestionar Evento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
                 <div class="modal-body">
+
                     <form id="formEvento">
+
                         <input type="hidden" id="eventoId">
 
+                        <!-- SELECT EVENTO -->
                         <div class="mb-3">
-                            <label class="form-label fw-semibold text-secondary">Tipo de Evento</label>
-                            <input type="text" id="eventoTipo" class="form-control border-1"
-                                style="background-color: #f8f9fa;" placeholder="Ej: Boda">
+                            <label class="form-label fw-bold">Tipo de Evento</label>
+                            <select id="eventoSeleccionadoModal" class="form-control form-select">
+                                <option value="">Selecciona un evento</option>
+                            </select>
                         </div>
 
+                        <!-- PRECIO -->
                         <div class="mb-3">
-                            <label class="form-label fw-semibold text-secondary">Precio Base (€)</label>
-                            <input type="number" id="eventoPrecio" class="form-control border-1"
-                                style="background-color: #f8f9fa;" placeholder="0.00">
+                            <label class="form-label fw-bold">Precio Base (€)</label>
+                            <input type="text" id="eventoPrecio" class="form-control">
                         </div>
 
+                        <!-- CAPACIDAD -->
                         <div class="mb-3">
-                            <label class="form-label fw-semibold text-secondary">Capacidad Máxima</label>
-                            <input type="number" id="eventoCapacidad" class="form-control border-1"
-                                style="background-color: #f8f9fa;" placeholder="Ej: 200">
+                            <label class="form-label fw-bold">Capacidad Máxima</label>
+                            <input type="text" id="eventoCapacidad" class="form-control">
                         </div>
+
                     </form>
+
                 </div>
 
-                <div class="modal-footer border-top-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" id="btnAccionEvento" class="btn btn-primary px-4 fw-bold">Guardar
-                        Cambios</button>
+                <div class="modal-footer border-0">
+                    <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+
+                    <button id="btnAccionEvento" class="btn btn-primary px-4">
+                        Guardar Cambios
+                    </button>
                 </div>
 
             </div>
         </div>
+    </div>
     </div>
 
     <!-- SCRIPTS -->

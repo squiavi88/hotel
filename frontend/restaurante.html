@@ -264,18 +264,20 @@
                         <input type="hidden" id="mesaId">
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold text-secondary">Número de Mesa</label>
-                            <input type="number" id="mesaNumero" class="form-control" placeholder="Ej: 1">
+                            <label class="form-label fw-bold">Actividad</label>
+                            <select class="form-control" id="mesaSeleccionadaModal">
+                                <option value="">Selecciona</option>
+                            </select>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-bold text-secondary">Capacidad (Personas)</label>
-                            <input type="number" id="mesaCapacidad" class="form-control" placeholder="Ej: 4">
+                            <input type="text" id="mesaCapacidad" class="form-control" placeholder="Ej: 4">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-bold text-secondary">Precio Base Reserva (€)</label>
-                            <input type="number" id="mesaPrecio" class="form-control" step="0.01" placeholder="20.00">
+                            <input type="text" id="mesaPrecio" class="form-control" step="0.01" placeholder="20.00">
                         </div>
                     </form>
                 </div>

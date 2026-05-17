@@ -229,50 +229,66 @@
     </div>
     <!-- MODAL de modificacion de los campos de actividades -->
 
-    <div class="modal fade" id="modalGestionActividad" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-white shadow-lg border-0">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold" id="tituloModalActividad">Gestionar Actividad</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formActividad">
-                        <input type="hidden" id="actividadId">
+    <!-- MODAL Gestión Actividad -->
+<div class="modal fade" id="modalGestionActividad" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-white shadow-lg border-0">
 
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Nombre de la Actividad</label>
-                            <input type="text" id="actividadNombre" class="form-control"
-                                placeholder="Ej: Tirolina, Masaje...">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Precio (€)</label>
-                            <input type="number" id="actividadPrecio" class="form-control" step="0.01">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Capacidad Máxima</label>
-                            <input type="number" id="actividadCapacidad" class="form-control">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary px-4" onclick="guardarActividad()">Guardar
-                        Cambios</button>
-                </div>
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="tituloModalActividad">
+                    Gestionar Actividad
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+
+            <div class="modal-body">
+                <form id="formActividad">
+
+                    <input type="hidden" id="actividadId">
+
+                    <!-- ACTIVIDAD -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Actividad</label>
+                        <select class="form-control" id="actividadSeleccionadaModal">
+                            <option value="">Selecciona</option>
+                        </select>
+                    </div>
+
+                    <!-- PRECIO  -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Precio (€)</label>
+                        <input type="text" id="actividadPrecio" class="form-control" placeholder="Ej: 25 €">
+                    </div>
+
+                    <!-- CAPACIDAD -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Capacidad Máxima</label>
+                        <input type="text" id="actividadCapacidad" class="form-control" placeholder="Ej: 333 ">
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+
+                <button type="button" class="btn btn-primary px-4" onclick="guardarActividad()">
+                    Guardar Cambios
+                </button>
+            </div>
+
         </div>
     </div>
+</div>
 
     <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="./js/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="./js/global/global.js"></script>
     <script src="./js/actividades/actividades.js"></script>
-    <script src="./js/actividades/modificarActividades.js></script>
-
+<script src="./js/actividades/modificarActividades.js"></script>
 
 </body>
 
