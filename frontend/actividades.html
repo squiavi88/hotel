@@ -227,8 +227,57 @@
             </div>
         </div>
     </div>
-    <!-- MODAL de modificacion de los campos de actividades -->
 
+    <!-- MODAL DE PAGO PREMIUM -->
+    <div class="modal fade" id="modalPago" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-pago-premium">
+
+                <div class="modal-header border-0">
+                    <div class="d-flex align-items-center">
+                        <span class="icono-tarjeta me-2">💳</span>
+                        <h5 class="modal-title">Confirmar Pago</h5>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <p class="text-gold mb-3" id="resumenPago"></p>
+
+                    <label class="fw-bold text-light">Nombre del titular</label>
+                    <input type="text" id="pagoNombre" class="form-control mb-1 campo-pago">
+                    <small id="msgNombre" class="text-warning d-block mb-2"></small>
+
+                    <label class="fw-bold text-light">Número de tarjeta</label>
+                    <input type="text" id="pagoNumero" class="form-control mb-1 campo-pago" maxlength="19"
+                        placeholder="1234 5678 9012 3456">
+                    <small id="msgNumero" class="text-warning d-block mb-2"></small>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="fw-bold text-light">Fecha de expiración</label>
+                            <input type="month" id="pagoExpiracion" class="form-control mb-1 campo-pago">
+                            <small id="msgExp" class="text-warning d-block mb-2"></small>
+                        </div>
+                        <div class="col-6">
+                            <label class="fw-bold text-light">Código de seguridad</label>
+                            <input type="password" id="pagoCVV" class="form-control mb-1 campo-pago" maxlength="3"
+                                placeholder="***">
+                            <small id="msgCVV" class="text-warning d-block mb-2"></small>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer border-0">
+                    <button class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button id="btnConfirmarPago" class="btn btn-gold" disabled>Confirmar Pago</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <!-- MODAL Gestión Actividad -->
 <div class="modal fade" id="modalGestionActividad" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
