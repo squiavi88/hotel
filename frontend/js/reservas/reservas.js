@@ -2,7 +2,6 @@
 // PRECIOS POR HABITACIÓN
 // ===============================
 const precios = {};
-
 // ===============================
 // MOSTRAR MENSAJE DE RESERVA
 // ===============================
@@ -34,7 +33,7 @@ function calcularNoches(entrada, salida) {
 // ===============================
 async function cargarFechasOcupadas(id) {
     try {
-        const res = await fetch(`http://localhost:8080/hotel/reservas-habitaciones/ocupadas/${id}`, {
+        const res = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/reservas-habitaciones/ocupadas/${id}`, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
             credentials: "include"
@@ -215,7 +214,7 @@ function inicializarModalPago() {
             const userId = localStorage.getItem("id");
 
             try {
-                const res1 = await fetch("http://localhost:8080/hotel/reservas", {
+                const res1 = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/reservas`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
@@ -224,7 +223,7 @@ function inicializarModalPago() {
 
                 const reserva = await res1.json();
 
-                const res2 = await fetch("http://localhost:8080/hotel/reservas-habitaciones", {
+                const res2 = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/reservas-habitaciones`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
@@ -285,7 +284,7 @@ function inicializarModalPago() {
 
 async function cargarHabitaciones() {
     try {
-        const response = await fetch("http://localhost:8080/hotel/habitaciones", {
+        const response = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/habitaciones`, {
             method: "GET",
             credentials: "include",
             headers: {
@@ -351,7 +350,7 @@ async function cargarHabitaciones() {
 
 
 function renderizarHabitaciones(habitaciones) {
-    const API_URL = "http://localhost:8080";
+    const API_URL = `${window.location.protocol}//${window.location.hostname}:8080`;
     const container = document.getElementById("habitaciones-container");
 
     container.innerHTML = habitaciones.map(h => {

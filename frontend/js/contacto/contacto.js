@@ -52,7 +52,7 @@ async function enviarFormularioContacto(event) {
     const datos = { nombre, correo, mensaje };
 
     try {
-        const response = await fetch("http://localhost:8080/api/contacto", {
+        const response = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/api/contacto`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(datos)

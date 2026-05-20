@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const form = document.getElementById("registerForm");
@@ -120,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         try {
-            const response = await fetch("http://localhost:8080/hotel/register", {
+            const response = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)

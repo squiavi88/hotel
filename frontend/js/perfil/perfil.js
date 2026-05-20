@@ -1,7 +1,6 @@
 // =====================================
 // PERFIL – CARGA DE DATOS Y RESERVAS
 // =====================================
-
 // Cargar datos del usuario
 document.addEventListener("DOMContentLoaded", () => {
     mostrarNombreUsuario();
@@ -35,18 +34,18 @@ async function cargarReservasUsuario() {
     const userId = localStorage.getItem("id");
 
     try {
-        const response = await fetch(`http://localhost:8080/hotel/reservas/usuario/${userId}`, {
+        const response = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/reservas/usuario/${userId}`, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
             credentials: "include"
         });
 
-
+        
         if (!response.ok) {
             throw new Error("Error al cargar reservas");
         }
 
-
+        
         const reservas = await response.json();
         console.log("RESERVAS:", reservas);
 
@@ -152,7 +151,7 @@ function confirmarEliminacion(idReserva) {
 // =====================================
 async function eliminarReserva(idReserva) {
     try {
-        const response = await fetch(`http://localhost:8080/hotel/reservas/${idReserva}`, {
+        const response = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/reservas/${idReserva}`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
             credentials: "include"

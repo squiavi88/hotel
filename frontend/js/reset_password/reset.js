@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const emailInput = document.getElementById("reset-email");
@@ -19,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         errores[campo].classList.remove("d-none");
 
         const input = campo === "email" ? emailInput :
-            campo === "pass1" ? pass1 : pass2;
+                      campo === "pass1" ? pass1 : pass2;
 
         input.classList.add("is-invalid");
     }
@@ -30,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         errores[campo].classList.add("d-none");
 
         const input = campo === "email" ? emailInput :
-            campo === "pass1" ? pass1 : pass2;
+                      campo === "pass1" ? pass1 : pass2;
 
         input.classList.remove("is-invalid");
     }
@@ -83,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         limpiarError("pass2");
 
         try {
-            const response = await fetch("http://localhost:8080/hotel/recuperar-cuenta", {
+            const response = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/recuperar-cuenta`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, nueva })

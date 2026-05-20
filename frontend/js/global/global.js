@@ -35,7 +35,7 @@ function comprobarSesion() {
 // ===============================
 async function cerrarSesion() {
     try {
-        const res = await fetch("http://localhost:8080/logout", {
+        const res = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/logout`, {
             method: "POST",
             credentials: "include"
         });

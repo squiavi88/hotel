@@ -1,3 +1,5 @@
+
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const form = document.getElementById("loginForm");
@@ -79,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Email:", email, "Password:", password); // debug
 
         try {
-            const response = await fetch("http://localhost:8080/hotel/login", {
+            const response = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

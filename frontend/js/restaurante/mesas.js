@@ -1,3 +1,4 @@
+
 /**
  * =====================================
  * VARIABLES GLOBALES
@@ -41,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
  */
 async function cargarMesas() {
     try {
-        const respuesta = await fetch('http://localhost:8080/hotel/mesas', {
+        const respuesta = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/mesas`, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
             credentials: "include"
@@ -337,7 +338,7 @@ function inicializarModalPago() {
             const userId = localStorage.getItem("id");
 
             try {
-                const res1 = await fetch("http://localhost:8080/hotel/reservas", {
+                const res1 = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/reservas`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
@@ -355,7 +356,7 @@ function inicializarModalPago() {
                     numeroPersonas: personas
                 };
 
-                const res2 = await fetch("http://localhost:8080/hotel/reservas-mesas", {
+                const res2 = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/reservas-mesas`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
@@ -363,7 +364,7 @@ function inicializarModalPago() {
                 });
 
                 if (!res2.ok) {
-                    mostrarAvisoMesa("❌ Error al realizar la reserva", "danger");
+                   mostrarAvisoMesa("❌ Error al realizar la reserva", "danger");
                 }
 
                 const modal = bootstrap.Modal.getInstance(
@@ -432,7 +433,7 @@ async function datosOcupados(selectDates, dateStr) {
 
     try {
         // Consultamos al servidor qué horarios están ya pillados para esta mesa y fecha
-        const respuesta = await fetch(`http://localhost:8080/hotel/reservas-mesas/ocupadas/${idMesaActual}`, {
+        const respuesta = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/reservas-mesas/ocupadas/${idMesaActual}`, {
             method: 'GET',
             headers: { "Content-Type": "application/json" },
             credentials: "include"

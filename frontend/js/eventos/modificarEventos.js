@@ -1,141 +1,61 @@
-/**
- * ============================================================
- * CARGAR EVENTOS EN MODAL
- * ============================================================
- */
-
-async function cargarEventosModal() {
-
-    try {
-
-        const respuesta = await fetch(
-            "http://localhost:8080/hotel/evento",
-            {
-                method: "GET",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include"
-            }
-        );
-
-        const datos = await respuesta.json();
-
-        console.log(datos); // DEBUG
-
-        const select = document.getElementById("eventoSeleccionadoModal");
 
 
+// Identificamos el modal para el Listener de limpieza
+const modalEventoElement = document.getElementById('modalGestionEvento');
 
-        select.innerHTML =
-            '<option value="">Selecciona un evento</option>';
+modalEventoElement.addEventListener('hidden.bs.modal', function () {
+    // Resetea el formulario completo de actividades
+    document.getElementById('formEvento').reset();
 
-        datos.forEach(evento => {
+    // Limpieza manual de campos si no están dentro del form o son "autofill"
+    document.getElementById('eventoIdSelect').value = "";
+    document.getElementById('eventoTipo').value = "";
+    document.getElementById('eventoPrecio').value = "";
+    document.getElementById('eventoCapacidad').value = "";
 
-            const option = document.createElement("option");
+    // Restaurar título del modal
+    document.getElementById('tituloModalEvento').innerText = "Gestionar Evento";
 
-            option.value = evento.id;
+    console.log("Formulario de evento reseteado automáticamente.");
+});
 
-            // ✅ CAMBIO IMPORTANTE
-            option.textContent = evento.nombre;
-
-            option.dataset.precio = evento.precioBase;
-            option.dataset.capacidad = evento.capacidad;
-
-            select.appendChild(option);
-        });
-
-        /**
-         * AUTORELLENAR CAMPOS
-         */
-        select.addEventListener("change", function () {
-
-            const opcion =
-                this.options[this.selectedIndex];
-
-            document.getElementById("eventoPrecio").value =
-                opcion.dataset.precio || "";
-
-            document.getElementById("eventoCapacidad").value =
-                opcion.dataset.capacidad || "";
-        });
-
-    } catch (error) {
-        console.error("Error cargando eventos:", error);
-    }
-}
+document.getElementById('btnGuardarEvento').addEventListener('click', async () => {
+    // Ejecutamos la función de guardado al hacer clic
+    await guardarEvento();
+});
 
 /**
  * ============================================================
- * GUARDAR EVENTO
+ *  FUNCIÓN PARA GUARDAR (DETECTA SI ES POST O PUT)
  * ============================================================
  */
 
 async function guardarEvento() {
+    const id = document.getElementById('eventoIdSelect').value;
+
+    const evento = {
+        nombre: document.getElementById('eventoTipo').value,
+        precioBase: parseFloat(document.getElementById('eventoPrecio').value),
+        capacidadPersonas: parseInt(document.getElementById('eventoCapacidad').value)
+    };
+
+    const metodo = id ? 'PUT' : 'POST';
+    const url = id ? `${window.location.protocol}//${window.location.hostname}:8080/hotel/evento/${id}` : `${window.location.protocol}//${window.location.hostname}:8080/hotel/evento`;
 
     try {
+        const resp = await fetch(url, {
+            method: metodo,
+            headers: { 'Content-Type': 'application/json' },
+            credentials: "include",
+            body: JSON.stringify(evento)
+        });
 
-        const idEvento =
-            document.getElementById("eventoTipo").value;
-
-        const precio =
-            document.getElementById("eventoPrecio").value;
-
-        const capacidad =
-            document.getElementById("eventoCapacidad").value;
-
-        if (!idEvento) {
-            alert("Selecciona un evento");
-            return;
+        if (resp.ok) {
+            alert("¡Operación realizada con éxito!");
+            location.reload();
         }
-
-        const datosEvento = {
-            id: idEvento,
-            precioBase: parseFloat(precio),
-            capacidad: parseInt(capacidad)
-        };
-
-        const respuesta = await fetch(
-            `http://localhost:8080/hotel/evento/${idEvento}`,
-            {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify(datosEvento)
-            }
-        );
-
-        if (respuesta.ok) {
-
-            alert("Evento actualizado correctamente");
-
-            const modal =
-                bootstrap.Modal.getInstance(
-                    document.getElementById("modalGestionEvento")
-                );
-
-            modal.hide();
-
-            cargarEventosModal();
-
-        } else {
-            alert("Error al actualizar");
-        }
-
     } catch (error) {
-        console.error("Error PUT:", error);
+        alert("Error de conexión con el servidor");
     }
 }
 
-/**
- * ============================================================
- * INICIALIZACIÓN SEGURA
- * ============================================================
- */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    cargarEventosModal();
-
-    document
-        .getElementById("btnAccionEvento")
-        ?.addEventListener("click", guardarEvento);
-});

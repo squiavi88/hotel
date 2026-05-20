@@ -1,4 +1,5 @@
 
+
 /**
  * ============================================================
  * FUNCIÓN PARA CARGAR DATOS AL ESCRIBIR NOMBRE (Autocompletado)
@@ -7,10 +8,10 @@
 document.getElementById('habNombre').addEventListener('blur', async (e) => {
     const nombre = e.target.value;
     if (nombre.length > 3) {
-        const resp = await fetch(`http://localhost:8080/hotel/habitaciones/buscarPorNombre?nombre=${encodeURIComponent(nombre)}`);
-
-
-
+        const resp = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/habitaciones/buscarPorNombre?nombre=${encodeURIComponent(nombre)}`);
+        
+        
+        
         if (resp.ok) {
             const data = await resp.json();
 
@@ -80,7 +81,7 @@ async function guardarHabitacion() {
     };
 
     const metodo = id ? 'PUT' : 'POST';
-    const url = id ? `http://localhost:8080/hotel/habitaciones/${id}` : `http://localhost:8080/hotel/habitaciones`;
+    const url = id ? `${window.location.protocol}//${window.location.hostname}:8080/hotel/habitaciones/${id}` : `${window.location.protocol}//${window.location.hostname}:8080/hotel/habitaciones`;
 
     try {
         const resp = await fetch(url, {

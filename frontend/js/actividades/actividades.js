@@ -26,7 +26,7 @@ flatpickr("#fechaActividad", {
 
 async function cargarActividades() {
     // Petición al backend para obtener el catálogo de actividades
-    const respuesta = await fetch('http://localhost:8080/hotel/actividad', {
+    const respuesta = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/actividad`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include" // Permite enviar cookies de sesión
@@ -65,7 +65,7 @@ async function cargarActividades() {
 
     selectId.innerHTML = '<option value="">Seleccionar ID</option>';
 
-// llenar select con IDs
+    // llenar select con IDs
     datos.forEach(actividad => {
         const option = document.createElement("option");
 
@@ -75,7 +75,7 @@ async function cargarActividades() {
         selectId.appendChild(option);
     });
 
-// autofill
+    // autofill
     selectId.addEventListener("change", function () {
 
         const actividadSeleccionada = datos.find(
@@ -145,7 +145,7 @@ async function probarDisponibilidad(fecha) {
     try {
 
         const response = await fetch(
-            `http://localhost:8080/hotel/reservas-actividades/ocupadas/${fecha}`,
+            `${window.location.protocol}//${window.location.hostname}:8080/hotel/reservas-actividades/ocupadas/${fecha}`,
             {
                 method: "GET",
                 headers: {
@@ -232,8 +232,8 @@ async function probarDisponibilidad(fecha) {
 
             const turnosReservados =
                 actividadesReservadas[
-                    actividadSeleccionada
-                    ] || [];
+                actividadSeleccionada
+                ] || [];
 
             for (const option of selectTurno.options) {
 
@@ -287,7 +287,7 @@ function inicializarModalPago() {
 
             try {
                 // PASO 1: Creamos la Reserva Maestra vinculada al usuario
-                const res1 = await fetch("http://localhost:8080/hotel/reservas", {
+                const res1 = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/reservas`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
@@ -306,7 +306,7 @@ function inicializarModalPago() {
                     monto: 0 // El backend calculará el precio final
                 };
 
-                const res2 = await fetch("http://localhost:8080/hotel/reservas-actividades", {
+                const res2 = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/reservas-actividades`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",

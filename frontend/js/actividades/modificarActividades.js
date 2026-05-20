@@ -1,6 +1,5 @@
-
 // Identificamos el modal para el Listener de limpieza
-const modalMesaElement = document.getElementById('modalGestionActividad');
+const modalActividadElement = document.getElementById('modalGestionActividad');
 
 modalActividadElement.addEventListener('hidden.bs.modal', function () {
     // Resetea el formulario completo de actividades
@@ -26,7 +25,7 @@ document.getElementById('btnGuardarActividad').addEventListener('click', async (
 //  FUNCIÓN PARA GUARDAR (CREAR O ACTUALIZAR)
 async function guardarActividad() {
     const id = document.getElementById('actividadIdSelect').value;
-
+    
     const actividadData = {
         nombre: document.getElementById('actividadNombre').value,
         precioBase: parseFloat(document.getElementById('actividadPrecio').value),
@@ -35,7 +34,7 @@ async function guardarActividad() {
 
     // Definimos método y ruta directamente
     const metodo = id ? 'PUT' : 'POST';
-    const url = id ? `http://localhost:8080/hotel/actividad/${id}` : `http://localhost:8080/hotel/actividad`;
+    const url = id ? `${window.location.protocol}//${window.location.hostname}:8080/hotel/actividad/${id}` : `${window.location.protocol}//${window.location.hostname}:8080/hotel/actividad`;
 
     try {
         const response = await fetch(url, {
