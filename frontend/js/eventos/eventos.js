@@ -325,7 +325,7 @@ function inicializarModalPago() {
                     body: JSON.stringify(datosEvento)
                 });
 
-                if (res2.ok) {
+                if (!res2.ok) {
                     mostrarAvisoEvento("❌ Error al realizar la reserva", "danger");
                     // Refrescamos disponibilidad para que el dataset se actualice tras la reserva
                 };
@@ -337,7 +337,13 @@ function inicializarModalPago() {
                 modal.hide();
 
                 setTimeout(() => {
-                    mostrarAvisoEvento("✅ Reserva realizada correctamente", "succes");
+                    mostrarAvisoEvento(` Pago realizado y evento reservado correctamente.
+     ${selectElement.options[selectElement.selectedIndex].text}
+     · ${personas} participante(s)
+     · ${fecha}
+     · Sala: ${sala}
+     · Catering: ${catering}`,
+                        "success");
                     resetearFormulario();
                 }, 300);
 

@@ -364,7 +364,7 @@ function inicializarModalPago() {
                 });
 
                 if (!res2.ok) {
-                   mostrarAvisoMesa("❌ Error al realizar la reserva", "danger");
+                    mostrarAvisoMesa("❌ Error al realizar la reserva", "danger");
                 }
 
                 const modal = bootstrap.Modal.getInstance(
@@ -374,7 +374,12 @@ function inicializarModalPago() {
                 modal.hide();
 
                 setTimeout(() => {
-                    mostrarAvisoMesa("✅ Reserva realizada correctamente", "succes");
+                    mostrarAvisoMesa(` Pago realizado y reserva confirmada.
+     Mesa ${mesaSeleccionada.numeroMesa}
+     · ${personas} persona(s)
+     · ${fecha}
+     · ${hora.slice(0, 5)}`,
+                        "success");
                     resetearFormulario();
                 }, 300);
 

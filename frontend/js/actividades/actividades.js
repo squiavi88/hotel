@@ -324,7 +324,13 @@ function inicializarModalPago() {
                 modal.hide();
 
                 setTimeout(() => {
-                    mostrarAvisoActividad("✅ Reserva realizada correctamente", "succes");
+                    mostrarAvisoActividad(`Pago realizado y actividad reservada correctamente.
+    ${nombreActividad}
+    · ${fecha}
+    · Turno: ${turno}
+    · ${personas} participante(s)
+    · Total: ${total.toFixed(2)} €`,
+    "success");
                     resetearFormulario();
                 }, 300);
 

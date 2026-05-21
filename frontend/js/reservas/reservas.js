@@ -32,6 +32,7 @@ function calcularNoches(entrada, salida) {
 // FLATPICKR + BLOQUEO DE FECHAS
 // ===============================
 async function cargarFechasOcupadas(id) {
+
     try {
         const res = await fetch(`${window.location.protocol}//${window.location.hostname}:8080/hotel/reservas-habitaciones/ocupadas/${id}`, {
             method: "GET",
@@ -248,7 +249,11 @@ function inicializarModalPago() {
                 setTimeout(async () => {
                     await cargarHabitaciones();
                     mostrarMensajeReserva(
-                        `Reserva realizada correctamente. Total: ${total} €`,
+                        ` Pago realizado y habitación reservada correctamente.
+         Habitación ${id}
+         · ${noches} noche(s)
+         · ${entrada} → ${salida}
+         · Total pagado: ${total} €`,
                         "success"
                     );
                 }, 300);
